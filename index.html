@@ -228,6 +228,8 @@
     </style>
 </head>
 <body class="font-cairo text-textMain">
+    <audio id="sound-click" src="clic.wav" preload="auto"></audio>
+    <audio id="sound-save" src="save.wav" preload="auto"></audio>
 
     <div id="setup-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
         <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
@@ -362,6 +364,9 @@
                     <i class="fas fa-calendar text-secondary"></i>
                     <span id="date" class="text-sm">----/--/--</span>
                 </div>
+                <button onclick="toggleSound()" id="btn-sound-toggle" class="glass-card px-3 py-1.5 rounded-full hover:bg-white/90 transition-all" title="تشغيل/إيقاف الصوت">
+                    <i id="sound-icon" class="fas fa-volume-up text-gold text-sm"></i>
+                </button>
                 <button onclick="manualSync()" id="btn-sync" class="glass-card px-3 py-1.5 rounded-full hover:bg-white/90 transition-all" title="مزامنة الآن">
                     <i id="sync-icon" class="fas fa-sync-alt text-gold text-sm"></i>
                 </button>
@@ -1394,6 +1399,7 @@ function response(obj) {
         let settings = { pricePerHour: 100, cooldownSeconds: 30 };
         let stats = { todayRevenue: 0, todaySessions: 0 };
         let currentReceipt = null;
+        let soundEnabled = localStorage.getItem('cec_sound_enabled') !== 'false';
 
         function init() {
             loadData();
@@ -1405,6 +1411,7 @@ function response(obj) {
             setInitialConnectionStatus();
             renderSyncLog();
             updateLastSyncDisplay();
+            updateSoundButton();
 
             // Setup cloud
             if (CLOUD_CONFIG.WEB_APP_URL) {
@@ -1457,6 +1464,26 @@ function response(obj) {
             saveSessions();
             saveSettings();
             saveStats();
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('cec_sound_enabled', soundEnabled);
+            updateSoundButton();
+            showToast(soundEnabled ? 'تم تفعيل الصوت' : 'تم إيقاف الصوت', 'success');
+        }
+
+        function updateSoundButton() {
+            const icon = document.getElementById('sound-icon');
+            const btn = document.getElementById('btn-sound-toggle');
+            if (!icon || !btn) return;
+            if (soundEnabled) {
+                icon.className = 'fas fa-volume-up text-gold text-sm';
+                btn.title = 'إيقاف الصوت';
+            } else {
+                icon.className = 'fas fa-volume-mute text-red-500 text-sm';
+                btn.title = 'تشغيل الصوت';
+            }
         }
 
         function saveCards() { localStorage.setItem(STORAGE_KEYS.CARDS, JSON.stringify(cards)); }
@@ -1566,6 +1593,7 @@ function response(obj) {
                         status: 'completed'
                     });
 
+                    playSaveSound();
                     showToast(`خروج: بطاقة #${card.number} | ${session.hours} ساعة | ${session.priceNew} ل.س`, 'success');
                     showReceipt(session, card);
                     showScanResult(card, 'exit', session);
@@ -1594,6 +1622,7 @@ function response(obj) {
                 card.lastUsed = now.toISOString();
                 card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
 
+                playSaveSound();
                 saveAllData();
 
                 // Sync to cloud
@@ -1612,6 +1641,7 @@ function response(obj) {
                 showToast('الرجاء إدخال رقم البطاقة', 'warning');
                 return;
             }
+            playClickSound();
             processScan(value);
             input.value = '';
         }
@@ -1627,6 +1657,7 @@ function response(obj) {
                 { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 },
                 (decodedText) => { 
                     console.log('QR Code detected:', decodedText);
+                    playClickSound();
                     processScan(decodedText); 
                 },
                 (errorMessage) => {
@@ -1914,6 +1945,7 @@ function response(obj) {
             card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
             activeSessions = activeSessions.filter(s => s.id !== sessionId);
 
+            playSaveSound();
             saveAllData();
             await updateSessionInCloud(session.id, {
                 exitTime: session.exitTime, hours: session.hours,
@@ -2026,6 +2058,26 @@ function response(obj) {
 
         function formatTime(iso) { if (!iso) return '-'; return new Date(iso).toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
         function formatDateTime(iso) { if (!iso) return '-'; return new Date(iso).toLocaleString('ar-SY', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+
+        function playAudio(id) {
+            if (!soundEnabled) return;
+            try {
+                const audio = document.getElementById(id);
+                if (!audio) return;
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            } catch (err) {
+                console.warn('Audio play failed', err);
+            }
+        }
+
+        function playClickSound() {
+            playAudio('sound-click');
+        }
+
+        function playSaveSound() {
+            playAudio('sound-save');
+        }
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
