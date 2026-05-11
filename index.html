@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>كراج نادي الفروسية المركزي - متصل بالسحابة</title>
 
-    <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2D5016">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -230,10 +229,8 @@
 </head>
 <body class="font-cairo text-textMain">
 
-    <!-- ==================== SETUP GUIDE MODAL ==================== -->
     <div id="setup-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
         <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
-            <!-- Header -->
             <div class="bg-gradient-to-r from-primary to-primaryLight p-6 rounded-t-3xl text-white">
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
@@ -246,9 +243,7 @@
                 </div>
             </div>
 
-            <!-- Steps -->
             <div class="p-6 space-y-6">
-                <!-- Step 1 -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                         <span class="text-primary font-bold">1</span>
@@ -267,7 +262,6 @@
                     </div>
                 </div>
 
-                <!-- Step 2 -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center">
                         <span class="text-gold font-bold">2</span>
@@ -285,7 +279,6 @@
                     </div>
                 </div>
 
-                <!-- Step 3 -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
                         <span class="text-secondary font-bold">3</span>
@@ -313,7 +306,6 @@
                     </div>
                 </div>
 
-                <!-- Step 4 -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                         <span class="text-accent font-bold">4</span>
@@ -333,7 +325,6 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex gap-3 pt-4 border-t border-gray-200">
                     <button onclick="testConnection()" class="btn-primary flex-1 py-3 rounded-xl font-semibold">
                         <i class="fas fa-plug ml-2"></i>
@@ -347,7 +338,6 @@
         </div>
     </div>
 
-    <!-- Header -->
     <header class="glass sticky top-0 z-50 mb-6">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -360,7 +350,6 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <!-- Connection Status -->
                 <div id="connection-status" class="flex items-center gap-2 glass-card px-3 py-1.5 rounded-full cursor-pointer" onclick="openSetupModal()">
                     <span id="conn-dot" class="connection-dot online"></span>
                     <span id="conn-text" class="text-sm font-semibold text-success">متصل</span>
@@ -373,13 +362,11 @@
                     <i class="fas fa-calendar text-secondary"></i>
                     <span id="date" class="text-sm">----/--/--</span>
                 </div>
-                <!-- Sync Button -->
                 <button onclick="manualSync()" id="btn-sync" class="glass-card px-3 py-1.5 rounded-full hover:bg-white/90 transition-all" title="مزامنة الآن">
                     <i id="sync-icon" class="fas fa-sync-alt text-gold text-sm"></i>
                 </button>
             </div>
         </div>
-        <!-- Sync Progress Bar -->
         <div id="sync-progress" class="hidden">
             <div class="h-0.5 bg-gray-200">
                 <div id="sync-progress-bar" class="h-full bg-gradient-to-r from-primary to-gold progress-bar" style="width: 0%"></div>
@@ -387,10 +374,8 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 pb-8">
 
-        <!-- Navigation Tabs -->
         <nav class="glass rounded-2xl mb-6 p-2 flex gap-1 overflow-x-auto">
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
                 <i class="fas fa-chart-line"></i>
@@ -419,7 +404,6 @@
             </button>
         </nav>
 
-        <!-- DASHBOARD TAB -->
         <section id="dashboard" class="tab-content animate-fade-in">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="glass-card rounded-2xl p-5 stat-card">
@@ -469,7 +453,6 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
             <div class="glass rounded-2xl p-6 mb-6">
                 <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                     <i class="fas fa-bolt text-gold"></i>
@@ -495,7 +478,6 @@
                 </div>
             </div>
 
-            <!-- Today's Summary -->
             <div class="glass rounded-2xl p-6">
                 <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                     <i class="fas fa-calendar-day text-gold"></i>
@@ -521,7 +503,6 @@
             </div>
         </section>
 
-        <!-- SCAN TAB -->
         <section id="scan" class="tab-content hidden animate-fade-in">
             <div class="grid lg:grid-cols-2 gap-6">
                 <div class="glass rounded-2xl p-6">
@@ -548,6 +529,15 @@
                             <i class="fas fa-stop ml-2"></i> إيقاف
                         </button>
                     </div>
+                    <div class="flex gap-3 mt-3">
+                        <button onclick="testCamera()" class="btn-secondary py-2 px-4 rounded-xl font-semibold text-sm">
+                            <i class="fas fa-camera ml-1"></i> اختبار الكاميرا
+                        </button>
+                        <button onclick="openConsole()" class="py-2 px-4 rounded-xl border border-gray-300 text-sm text-textMuted hover:bg-gray-50">
+                            <i class="fas fa-terminal ml-1"></i> فتح Console
+                        </button>
+                    </div>
+                    <p class="text-xs text-muted mt-2 text-center">إذا لم تعمل الكاميرا، افتح Developer Tools (F12) وراجع Console للرسائل</p>
                 </div>
                 <div class="glass rounded-2xl p-6">
                     <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
@@ -583,7 +573,6 @@
             </div>
         </section>
 
-        <!-- ACTIVE SESSIONS TAB -->
         <section id="active" class="tab-content hidden animate-fade-in">
             <div class="glass rounded-2xl p-6 mb-6">
                 <div class="flex items-center justify-between mb-4">
@@ -621,7 +610,6 @@
             </div>
         </section>
 
-        <!-- HISTORY TAB -->
         <section id="history" class="tab-content hidden animate-fade-in">
             <div class="glass rounded-2xl p-6">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
@@ -661,9 +649,7 @@
             </div>
         </section>
 
-        <!-- CLOUD TAB (NEW) -->
         <section id="cloud" class="tab-content hidden animate-fade-in">
-            <!-- Connection Status Card -->
             <div class="glass rounded-2xl p-6 mb-6">
                 <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                     <i class="fas fa-wifi text-gold"></i>
@@ -683,7 +669,6 @@
                 </div>
             </div>
 
-            <!-- Auto Sync Settings -->
             <div class="glass rounded-2xl p-6 mb-6">
                 <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                     <i class="fas fa-cog text-gold"></i>
@@ -713,7 +698,6 @@
                 </div>
             </div>
 
-            <!-- Sync History -->
             <div class="glass rounded-2xl p-6">
                 <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                     <i class="fas fa-history text-gold"></i>
@@ -731,7 +715,6 @@
             </div>
         </section>
 
-        <!-- SETTINGS TAB -->
         <section id="settings" class="tab-content hidden animate-fade-in">
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="glass rounded-2xl p-6">
@@ -801,7 +784,6 @@
         </section>
     </main>
 
-    <!-- Receipt Modal -->
     <div id="receipt-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background: rgba(45, 80, 22, 0.3); backdrop-filter: blur(8px);">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full animate-fade-in shadow-2xl">
             <div class="text-center mb-6">
@@ -844,7 +826,6 @@
         </div>
     </div>
 
-    <!-- Reset Modal -->
     <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background: rgba(45, 80, 22, 0.3); backdrop-filter: blur(8px);">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full animate-fade-in shadow-2xl">
             <div class="text-center mb-4">
@@ -861,7 +842,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
         <div class="glass-dark text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-slide-in">
             <i id="toast-icon" class="fas fa-check-circle text-gold"></i>
@@ -1510,35 +1490,43 @@ function response(obj) {
         }
 
         function findCardByBarcode(barcode) {
+            console.log('Searching for barcode:', barcode);
             barcode = barcode.trim().toUpperCase();
+            console.log('Normalized barcode:', barcode);
             let card = cards.find(c => c.barcode === barcode);
+            console.log('Exact match:', card);
             if (card) return card;
             card = cards.find(c => c.number === barcode || c.id.toString() === barcode);
+            console.log('Number/ID match:', card);
             if (card) return card;
             card = cards.find(c => barcode.includes(c.barcode) || c.barcode.includes(barcode));
+            console.log('Partial match:', card);
             if (card) return card;
             const num = parseInt(barcode);
+            console.log('Parsed number:', num);
             if (num >= 1 && num <= 50) return cards.find(c => c.id === num);
             return null;
         }
 
         async function processScan(barcode) {
+            console.log('Processing scan for barcode:', barcode);
             const card = findCardByBarcode(barcode);
+            console.log('Found card:', card);
             if (!card) {
-                showToast('البطاقة غير موجودة!', 'error');
-                showScanResult(null, 'error');
+                showToast('البطاقة غير موجودة! (' + barcode + ')', 'error');
+                showScanResult(null, 'error', barcode);
                 return;
             }
 
             const now = new Date();
 
-            if (card.status === 'cooldown' && card.cooldownEnd) {
+            // التعديل الأول: تطبيق فترة التهدئة بغض النظر عن حالة البطاقة
+            if (card.cooldownEnd) {
                 const cooldownEnd = new Date(card.cooldownEnd);
                 if (now < cooldownEnd) {
                     const secondsLeft = Math.ceil((cooldownEnd - now) / 1000);
                     showToast(`البطاقة في فترة تهدئة! انتظر ${secondsLeft} ثانية`, 'warning');
-                    showScanResult(card, 'cooldown', secondsLeft);
-                    return;
+                    return; // إخفاء الواجهة المزعجة والاكتفاء بالرسالة
                 }
             }
 
@@ -1601,8 +1589,10 @@ function response(obj) {
                 allSessions.push(session);
                 activeSessions.push(session);
 
+                // التعديل الثاني: إضافة التهدئة عند الدخول لمنع الخروج الفوري
                 card.status = 'active';
                 card.lastUsed = now.toISOString();
+                card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
 
                 saveAllData();
 
@@ -1634,14 +1624,21 @@ function response(obj) {
 
             html5QrCode.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.333 },
-                (decodedText) => { processScan(decodedText); },
-                () => {}
+                { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 },
+                (decodedText) => { 
+                    console.log('QR Code detected:', decodedText);
+                    processScan(decodedText); 
+                },
+                (errorMessage) => {
+                    console.log('QR Code scan error:', errorMessage);
+                }
             ).then(() => {
+                console.log('Camera started successfully');
                 document.getElementById('btn-start-scan').classList.add('hidden');
                 document.getElementById('btn-stop-scan').classList.remove('hidden');
                 showToast('الكاميرا تعمل', 'success');
             }).catch(err => {
+                console.error('Camera start error:', err);
                 showToast('خطأ في تشغيل الكاميرا: ' + err, 'error');
                 container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/70"><div class="text-center"><i class="fas fa-exclamation-circle text-4xl mb-2 text-accent"></i><p class="text-sm">لا توجد كاميرا متاحة</p></div></div>';
             });
@@ -1655,6 +1652,26 @@ function response(obj) {
                     document.getElementById('scanner-container').innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/50"><div class="text-center"><i class="fas fa-camera text-4xl mb-2"></i><p class="text-sm">اضغط "تشغيل الكاميرا" للبدء</p></div></div><div class="scan-line"></div>';
                 });
             }
+        }
+
+        function testCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        showToast('الكاميرا متاحة وتعمل', 'success');
+                        // Stop the stream immediately
+                        stream.getTracks().forEach(track => track.stop());
+                    })
+                    .catch(function(err) {
+                        showToast('خطأ في الكاميرا: ' + err.message, 'error');
+                    });
+            } else {
+                showToast('الكاميرا غير مدعومة في هذا المتصفح', 'error');
+            }
+        }
+
+        function openConsole() {
+            alert('افتح Developer Tools بالضغط على F12، ثم اذهب إلى تبويب Console لرؤية الرسائل');
         }
 
         function appendNum(num) { document.getElementById('manual-input').value += num; }
@@ -1753,17 +1770,26 @@ function response(obj) {
             }
         }
 
+        // التعديل الثالث: تحديث المؤقتات للتعامل مع التهدئة بشكل عام
         function updateLiveTimers() {
             renderActiveSessions();
             const now = new Date();
+            let changed = false;
+            
             cards.forEach(c => {
-                if (c.status === 'cooldown' && c.cooldownEnd && now >= new Date(c.cooldownEnd)) {
-                    c.status = 'available';
+                if (c.cooldownEnd && now >= new Date(c.cooldownEnd)) {
                     c.cooldownEnd = null;
-                    saveCards();
-                    renderCardsGrid();
+                    if (c.status === 'cooldown') {
+                        c.status = 'available';
+                    }
+                    changed = true;
                 }
             });
+            
+            if (changed) {
+                saveCards();
+                renderCardsGrid();
+            }
         }
 
         function renderHistory(filter = 'all') {
@@ -1833,7 +1859,8 @@ function response(obj) {
             resultDiv.classList.remove('hidden');
 
             if (type === 'error') {
-                contentDiv.innerHTML = '<div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-red-600 text-2xl"></i></div><h3 class="text-lg font-bold text-red-600">البطاقة غير موجودة</h3>';
+                const barcodeText = extra ? `<p class="text-sm text-muted mt-2">النص المقروء: ${extra}</p>` : '';
+                contentDiv.innerHTML = '<div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-red-600 text-2xl"></i></div><h3 class="text-lg font-bold text-red-600">البطاقة غير موجودة</h3>' + barcodeText;
             } else if (type === 'cooldown') {
                 contentDiv.innerHTML = `<div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-clock text-yellow-600 text-2xl"></i></div><h3 class="text-lg font-bold text-yellow-600">فترة تهدئة</h3><p class="text-2xl font-bold text-primary mt-2">${extra} ثانية</p>`;
             } else if (type === 'entry') {
@@ -2027,7 +2054,6 @@ function response(obj) {
         document.addEventListener('DOMContentLoaded', init);
     </script>
 
-    <!-- PWA Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -2043,4 +2069,3 @@ function response(obj) {
     </script>
 </body>
 </html>
-
