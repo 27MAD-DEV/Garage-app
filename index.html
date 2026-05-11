@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كراج نادي الفروسية المركزي - متصل بالسحابة</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2D5016">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="كراج نادي الفروسية المركزي">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2D5016',
+                        primaryLight: '#3A6B20',
+                        secondary: '#A67C52',
+                        secondaryLight: '#B8936A',
+                        accent: '#E63946',
+                        accentLight: '#F0545F',
+                        background: '#F5F1E8',
+                        surface: 'rgba(255, 255, 255, 0.82)',
+                        surfaceHover: 'rgba(255, 255, 255, 0.92)',
+                        textMain: '#3D3D3D',
+                        textMuted: '#6B6B6B',
+                        muted: '#8B9B7A',
+                        gold: '#C9A84C',
+                        goldLight: '#D9BC6A',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        info: '#3B82F6',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-gold': 'pulseGold 2s ease-in-out infinite',
+                        'scan-line': 'scanLine 2s linear infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'fade-in': 'fadeIn 0.4s ease-out',
+                        'bounce-soft': 'bounceSoft 2s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGold: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(201, 168, 76, 0.4)' },
+                            '50%': { boxShadow: '0 0 0 12px rgba(201, 168, 76, 0)' },
+                        },
+                        scanLine: {
+                            '0%': { top: '0%' },
+                            '100%': { top: '100%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        bounceSoft: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { 
+            font-family: 'Cairo', sans-serif; 
+            scrollbar-width: thin; 
+            scrollbar-color: #A67C52 #F5F1E8; 
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F5F1E8; }
+        ::-webkit-scrollbar-thumb { background: #A67C52; border-radius: 3px; }
+        body {
+            background: linear-gradient(135deg, #F5F1E8 0%, #E8E4DA 50%, #F0EDE4 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(45, 80, 22, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        .glass-dark {
+            background: rgba(45, 80, 22, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 24px rgba(45, 80, 22, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.92);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(45, 80, 22, 0.12);
+        }
+        .scan-frame {
+            position: relative;
+            border: 3px solid transparent;
+            border-radius: 16px;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(45deg, #C9A84C, #A67C52, #C9A84C) border-box;
+        }
+        .scan-line {
+            position: absolute;
+            width: 90%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #C9A84C, #E63946, #C9A84C, transparent);
+            left: 5%;
+            animation: scanLine 2s linear infinite;
+            box-shadow: 0 0 8px rgba(201, 168, 76, 0.6);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2D5016 0%, #3A6B20 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3); }
+        .btn-primary::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::after { left: 100%; }
+        .btn-secondary {
+            background: linear-gradient(135deg, #A67C52 0%, #B8936A 100%);
+            color: white; border: none; transition: all 0.3s ease;
+        }
+        .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(166, 124, 82, 0.3); }
+        .btn-accent {
+            background: linear-gradient(135deg, #E63946 0%, #F0545F 100%);
+            color: white; border: none; transition: all 0.3s ease;
+        }
+        .btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3); }
+        .stat-card { position: relative; overflow: hidden; }
+        .stat-card::before {
+            content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.1) 0%, transparent 70%);
+            animation: rotateSlow 10s linear infinite;
+        }
+        @keyframes rotateSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .numpad-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(166, 124, 82, 0.2);
+            transition: all 0.15s ease;
+        }
+        .numpad-btn:hover { background: #A67C52; color: white; transform: scale(1.05); }
+        .numpad-btn:active { transform: scale(0.95); }
+        .session-row { transition: all 0.3s ease; }
+        .session-row:hover { background: rgba(166, 124, 82, 0.08); }
+        .card-badge.active { animation: pulseSoft 2s ease-in-out infinite; }
+        @keyframes pulseSoft {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.3); }
+            50% { box-shadow: 0 0 0 6px rgba(230, 57, 70, 0); }
+        }
+        .tab-btn { position: relative; transition: all 0.3s ease; }
+        .tab-btn.active { color: #2D5016; background: rgba(45, 80, 22, 0.08); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: 0; right: 20%; width: 60%; height: 3px;
+            background: linear-gradient(90deg, #C9A84C, #A67C52); border-radius: 3px;
+        }
+        .timer-live { font-variant-numeric: tabular-nums; }
+        .shimmer-bg {
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+        .modal-overlay { background: rgba(45, 80, 22, 0.3); backdrop-filter: blur(8px); }
+        .receipt {
+            background: linear-gradient(135deg, #fff 0%, #F5F1E8 100%);
+            border: 2px dashed #A67C52;
+        }
+        .connection-dot {
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+        }
+        .connection-dot.online { background: #10B981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+        .connection-dot.offline { background: #EF4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+        .connection-dot.syncing { background: #F59E0B; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); animation: pulse 1s infinite; }
+        .progress-bar { transition: width 0.5s ease; }
+        @media (max-width: 768px) {
+            .glass { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        }
+    </style>
+</head>
+<body class="font-cairo text-textMain">
+
+    <!-- ==================== SETUP GUIDE MODAL ==================== -->
+    <div id="setup-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-primary to-primaryLight p-6 rounded-t-3xl text-white">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-cloud text-3xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-tajawal">ربط النظام بجوجل شيت</h2>
+                        <p class="text-white/80 text-sm">خطوات الإعداد - تستغرق 3 دقائق فقط</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steps -->
+            <div class="p-6 space-y-6">
+                <!-- Step 1 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                        <span class="text-primary font-bold">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-primary mb-2">إنشاء جدول جوجل شيت جديد</h3>
+                        <p class="text-sm text-textMuted mb-3">اذهب إلى <a href="https://sheets.new" target="_blank" class="text-primary underline">sheets.new</a> لإنشاء شيت جديد</p>
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                            <p class="text-xs text-muted mb-2">أعد تسمية الورقة الأولى إلى:</p>
+                            <div class="flex gap-2 flex-wrap">
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-sm font-bold">Sessions</span>
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-sm font-bold">Cards</span>
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-sm font-bold">Settings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center">
+                        <span class="text-gold font-bold">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gold mb-2">فتح محرر Apps Script</h3>
+                        <p class="text-sm text-textMuted mb-3">من القائمة: <span class="bg-gray-100 px-2 py-0.5 rounded text-xs font-bold">Extensions → Apps Script</span></p>
+                        <div class="bg-gray-900 rounded-xl p-4 overflow-x-auto">
+                            <p class="text-xs text-muted mb-2">الصق هذا الكود في المحرر:</p>
+                            <pre id="apps-script-code" class="text-xs text-green-400 whitespace-pre-wrap font-mono leading-relaxed"></pre>
+                            <button onclick="copyAppsScript()" class="mt-3 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primaryLight transition-all">
+                                <i class="fas fa-copy ml-1"></i> نسخ الكود
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
+                        <span class="text-secondary font-bold">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-secondary mb-2">نشر التطبيق كـ Web App</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                                <span>اضغط <span class="bg-gray-100 px-2 py-0.5 rounded text-xs font-bold">Deploy → New deployment</span></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                                <span>اختر النوع: <span class="bg-gray-100 px-2 py-0.5 rounded text-xs font-bold">Web App</span></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                                <span>Execute as: <span class="bg-gray-100 px-2 py-0.5 rounded text-xs font-bold">Me</span></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                                <span>Who has access: <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">Anyone</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
+                        <span class="text-accent font-bold">4</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-accent mb-2">لصق رابط Web App هنا</h3>
+                        <div class="flex gap-2 flex-col sm:flex-row">
+                            <input type="url" id="web-app-url" placeholder="https://script.google.com/macros/s/..." 
+                                   class="flex-1 px-4 py-3 rounded-xl border-2 border-secondary/30 focus:border-gold focus:outline-none bg-white/80 text-sm dir-ltr">
+                            <button onclick="copyWebAppUrl()" class="btn-secondary px-4 py-3 rounded-xl text-sm font-semibold hover:bg-secondary/80 transition-all">
+                                <i class="fas fa-link ml-2"></i>
+                                نسخ رابط المشاركة
+                            </button>
+                        </div>
+                        <p class="text-xs text-muted mt-2">انسخ هذا الرابط وأرسله للمستخدمين الآخرين ليستخدموا نفس اتصال السحابة.</p>
+                        <p class="text-xs text-muted mt-1">سيبدأ الرابط بـ <code class="bg-gray-100 px-1 rounded">https://script.google.com/macros/s/</code></p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-4 border-t border-gray-200">
+                    <button onclick="testConnection()" class="btn-primary flex-1 py-3 rounded-xl font-semibold">
+                        <i class="fas fa-plug ml-2"></i>
+                        اختبار الاتصال
+                    </button>
+                    <button onclick="closeSetupModal()" class="py-3 px-6 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold hover:bg-gray-50">
+                        لاحقاً
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass sticky top-0 z-50 mb-6">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <img src="https://www.image2url.com/r2/default/images/1777193694982-0955eb59-0903-4510-ac64-e437d393f4b2.jpg" alt="شعار النادي" class="w-14 h-14 rounded-full object-cover border-2 border-gold shadow-lg animate-float">
+                </div>
+                <div>
+                    <h1 class="font-tajawal font-bold text-lg leading-tight text-primary">كراج نادي الفروسية المركزي</h1>
+                    <p class="text-xs text-muted">Central Equestrian Club Garage</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Connection Status -->
+                <div id="connection-status" class="flex items-center gap-2 glass-card px-3 py-1.5 rounded-full cursor-pointer" onclick="openSetupModal()">
+                    <span id="conn-dot" class="connection-dot online"></span>
+                    <span id="conn-text" class="text-sm font-semibold text-success">متصل</span>
+                </div>
+                <div class="hidden sm:flex items-center gap-2 glass-card px-3 py-1.5 rounded-full">
+                    <i class="fas fa-clock text-gold"></i>
+                    <span id="clock" class="text-sm font-semibold timer-live">--:--:--</span>
+                </div>
+                <div class="hidden sm:flex items-center gap-2 glass-card px-3 py-1.5 rounded-full">
+                    <i class="fas fa-calendar text-secondary"></i>
+                    <span id="date" class="text-sm">----/--/--</span>
+                </div>
+                <!-- Sync Button -->
+                <button onclick="manualSync()" id="btn-sync" class="glass-card px-3 py-1.5 rounded-full hover:bg-white/90 transition-all" title="مزامنة الآن">
+                    <i id="sync-icon" class="fas fa-sync-alt text-gold text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Sync Progress Bar -->
+        <div id="sync-progress" class="hidden">
+            <div class="h-0.5 bg-gray-200">
+                <div id="sync-progress-bar" class="h-full bg-gradient-to-r from-primary to-gold progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 pb-8">
+
+        <!-- Navigation Tabs -->
+        <nav class="glass rounded-2xl mb-6 p-2 flex gap-1 overflow-x-auto">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
+                <i class="fas fa-chart-line"></i>
+                <span>الرئيسية</span>
+            </button>
+            <button onclick="switchTab('scan')" id="tab-scan" class="tab-btn flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
+                <i class="fas fa-barcode"></i>
+                <span>مسح الباركود</span>
+            </button>
+            <button onclick="switchTab('active')" id="tab-active" class="tab-btn flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm relative">
+                <i class="fas fa-car-side"></i>
+                <span>الجلسات النشطة</span>
+                <span id="active-badge" class="absolute -top-1 -left-1 w-5 h-5 bg-accent text-white text-[10px] rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+            <button onclick="switchTab('history')" id="tab-history" class="tab-btn flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
+                <i class="fas fa-history"></i>
+                <span>السجل</span>
+            </button>
+            <button onclick="switchTab('cloud')" id="tab-cloud" class="tab-btn flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
+                <i class="fas fa-cloud"></i>
+                <span>السحابة</span>
+            </button>
+            <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn flex-1 min-w-[100px] py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-semibold text-sm">
+                <i class="fas fa-cog"></i>
+                <span>الإعدادات</span>
+            </button>
+        </nav>
+
+        <!-- DASHBOARD TAB -->
+        <section id="dashboard" class="tab-content animate-fade-in">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="glass-card rounded-2xl p-5 stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <i class="fas fa-car text-primary text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-primary font-tajawal" id="stat-cars">0</span>
+                    </div>
+                    <p class="text-sm text-textMuted">سيارات بالكراج</p>
+                    <div class="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="bar-cars" class="h-full bg-primary rounded-full progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-5 stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-gold/15 flex items-center justify-center">
+                            <i class="fas fa-coins text-gold text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-xl font-bold text-gold font-tajawal block" id="stat-revenue-new">0</span>
+                            <span class="text-xs text-muted" id="stat-revenue-old">0 قديم</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-textMuted">إيرادات اليوم</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5 stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+                            <i class="fas fa-clipboard-list text-secondary text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-secondary font-tajawal" id="stat-sessions">0</span>
+                    </div>
+                    <p class="text-sm text-textMuted">جلسات اليوم</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5 stat-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 rounded-xl bg-muted/15 flex items-center justify-center">
+                            <i class="fas fa-id-card text-muted text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold text-muted font-tajawal" id="stat-available">50</span>
+                    </div>
+                    <p class="text-sm text-textMuted">بطاقات شاغرة</p>
+                    <div class="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="bar-available" class="h-full bg-muted rounded-full progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-bolt text-gold"></i>
+                    إجراءات سريعة
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button onclick="switchTab('scan')" class="btn-primary py-4 px-6 rounded-xl flex flex-col items-center gap-2">
+                        <i class="fas fa-camera text-2xl"></i>
+                        <span class="font-semibold">مسح باركود</span>
+                    </button>
+                    <button onclick="switchTab('active')" class="btn-secondary py-4 px-6 rounded-xl flex flex-col items-center gap-2">
+                        <i class="fas fa-list text-2xl"></i>
+                        <span class="font-semibold">الجلسات النشطة</span>
+                    </button>
+                    <button onclick="exportToExcel()" class="py-4 px-6 rounded-xl flex flex-col items-center gap-2 bg-gradient-to-br from-green-600 to-green-700 text-white hover:shadow-lg transition-all">
+                        <i class="fas fa-file-excel text-2xl"></i>
+                        <span class="font-semibold">تصدير Excel</span>
+                    </button>
+                    <button onclick="switchTab('cloud')" class="py-4 px-6 rounded-xl flex flex-col items-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:shadow-lg transition-all">
+                        <i class="fas fa-cloud text-2xl"></i>
+                        <span class="font-semibold">إدارة السحابة</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Today's Summary -->
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-calendar-day text-gold"></i>
+                    ملخص اليوم
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b-2 border-primary/20">
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">البطاقة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">وقت الدخول</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">وقت الخروج</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">المدة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">السعر (جديد)</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">السعر (قديم)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="today-summary-body">
+                            <tr><td colspan="6" class="text-center py-8 text-textMuted">لا توجد جلسات اليوم</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCAN TAB -->
+        <section id="scan" class="tab-content hidden animate-fade-in">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-camera text-gold animate-pulse-gold"></i>
+                        مسح الباركود بالكاميرا
+                    </h2>
+                    <div class="scan-frame rounded-2xl p-1 mb-4">
+                        <div id="scanner-container" class="rounded-xl overflow-hidden bg-black aspect-[4/3] relative">
+                            <div class="absolute inset-0 flex items-center justify-center text-white/50">
+                                <div class="text-center">
+                                    <i class="fas fa-camera text-4xl mb-2"></i>
+                                    <p class="text-sm">اضغط "تشغيل الكاميرا" للبدء</p>
+                                </div>
+                            </div>
+                            <div class="scan-line"></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="startScanner()" id="btn-start-scan" class="btn-primary flex-1 py-3 rounded-xl font-semibold">
+                            <i class="fas fa-play ml-2"></i> تشغيل الكاميرا
+                        </button>
+                        <button onclick="stopScanner()" id="btn-stop-scan" class="btn-accent flex-1 py-3 rounded-xl font-semibold hidden">
+                            <i class="fas fa-stop ml-2"></i> إيقاف
+                        </button>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-keyboard text-gold"></i>
+                        إدخال يدوي
+                    </h2>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-textMuted mb-2">رقم البطاقة أو الباركود</label>
+                        <input type="text" id="manual-input" class="w-full px-4 py-3 rounded-xl border-2 border-secondary/30 focus:border-gold focus:outline-none bg-white/80 text-lg font-semibold text-center" placeholder="أدخل رقم البطاقة...">
+                    </div>
+                    <button onclick="processManualEntry()" class="btn-primary w-full py-3 rounded-xl font-semibold mb-4">
+                        <i class="fas fa-check ml-2"></i> تسجيل الدخول / الخروج
+                    </button>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="appendNum('1')" class="numpad-btn py-3 rounded-xl text-lg font-bold">1</button>
+                        <button onclick="appendNum('2')" class="numpad-btn py-3 rounded-xl text-lg font-bold">2</button>
+                        <button onclick="appendNum('3')" class="numpad-btn py-3 rounded-xl text-lg font-bold">3</button>
+                        <button onclick="appendNum('4')" class="numpad-btn py-3 rounded-xl text-lg font-bold">4</button>
+                        <button onclick="appendNum('5')" class="numpad-btn py-3 rounded-xl text-lg font-bold">5</button>
+                        <button onclick="appendNum('6')" class="numpad-btn py-3 rounded-xl text-lg font-bold">6</button>
+                        <button onclick="appendNum('7')" class="numpad-btn py-3 rounded-xl text-lg font-bold">7</button>
+                        <button onclick="appendNum('8')" class="numpad-btn py-3 rounded-xl text-lg font-bold">8</button>
+                        <button onclick="appendNum('9')" class="numpad-btn py-3 rounded-xl text-lg font-bold">9</button>
+                        <button onclick="clearNum()" class="numpad-btn py-3 rounded-xl text-lg font-bold bg-accent/10 text-accent"><i class="fas fa-backspace"></i></button>
+                        <button onclick="appendNum('0')" class="numpad-btn py-3 rounded-xl text-lg font-bold">0</button>
+                        <button onclick="clearAllNum()" class="numpad-btn py-3 rounded-xl text-lg font-bold bg-secondary/10 text-secondary"><i class="fas fa-eraser"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="scan-result" class="glass rounded-2xl p-6 mt-6 hidden">
+                <h3 class="text-lg font-bold text-primary mb-3">نتيجة آخر مسح</h3>
+                <div id="scan-result-content" class="text-center"></div>
+            </div>
+        </section>
+
+        <!-- ACTIVE SESSIONS TAB -->
+        <section id="active" class="tab-content hidden animate-fade-in">
+            <div class="glass rounded-2xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary flex items-center gap-2">
+                        <i class="fas fa-car text-gold animate-bounce-soft"></i>
+                        السيارات الموجودة حالياً
+                    </h2>
+                    <span class="glass-card px-4 py-2 rounded-full text-sm font-bold text-primary">
+                        <span id="active-count">0</span> سيارة
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b-2 border-primary/20">
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">البطاقة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">وقت الدخول</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">مدة البقاء</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">التكلفة المتوقعة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="active-sessions-body">
+                            <tr><td colspan="5" class="text-center py-8 text-textMuted">لا توجد سيارات بالكراج حالياً</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-clock text-gold"></i>
+                    البطاقات في فترة التهدئة
+                </h2>
+                <div id="cooldown-grid" class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3"></div>
+            </div>
+        </section>
+
+        <!-- HISTORY TAB -->
+        <section id="history" class="tab-content hidden animate-fade-in">
+            <div class="glass rounded-2xl p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                    <h2 class="text-lg font-bold text-primary flex items-center gap-2">
+                        <i class="fas fa-history text-gold"></i>
+                        سجل الجلسات
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="exportToExcel()" class="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-all flex items-center gap-2">
+                            <i class="fas fa-file-excel"></i> تصدير Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="flex gap-4 mb-4 overflow-x-auto pb-2">
+                    <button onclick="filterHistory('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-white">الكل</button>
+                    <button onclick="filterHistory('today')" id="filter-today" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white/80 text-textMain">اليوم</button>
+                    <button onclick="filterHistory('week')" id="filter-week" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white/80 text-textMain">هذا الأسبوع</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b-2 border-primary/20">
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">#</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">البطاقة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">الدخول</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">الخروج</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">المدة</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">السعر (جديد)</th>
+                                <th class="text-right py-3 px-4 text-sm font-bold text-primary">السعر (قديم)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <tr><td colspan="7" class="text-center py-8 text-textMuted">لا توجد جلسات مسجلة</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLOUD TAB (NEW) -->
+        <section id="cloud" class="tab-content hidden animate-fade-in">
+            <!-- Connection Status Card -->
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-wifi text-gold"></i>
+                    حالة الاتصال
+                </h2>
+                <div id="cloud-status-card" class="flex items-center gap-4 p-4 rounded-xl bg-green-50 border border-green-200">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-green-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-green-700">متصل بجوجل شيت</h3>
+                        <p class="text-sm text-textMuted">آخر مزامنة: <span id="last-sync-time">لم تتم بعد</span></p>
+                    </div>
+                    <button onclick="manualSync()" class="btn-primary px-4 py-2 rounded-xl text-sm font-semibold">
+                        <i class="fas fa-sync-alt ml-1"></i> مزامنة الآن
+                    </button>
+                </div>
+            </div>
+
+            <!-- Auto Sync Settings -->
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-cog text-gold"></i>
+                    إعدادات المزامنة التلقائية
+                </h2>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="glass-card rounded-xl p-4">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="font-semibold text-sm">مزامنة تلقائية</span>
+                            <div class="relative">
+                                <input type="checkbox" id="auto-sync-toggle" class="sr-only peer" checked onchange="toggleAutoSync()">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </div>
+                        </label>
+                        <p class="text-xs text-textMuted mt-2">مزامنة البيانات تلقائياً عند كل عملية تسجيل دخول/خروج</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-4">
+                        <label class="block text-sm font-semibold text-textMuted mb-2">فاصل المزامنة (دقائق)</label>
+                        <select id="sync-interval" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-gold focus:outline-none" onchange="updateSyncInterval()">
+                            <option value="1">كل دقيقة</option>
+                            <option value="5" selected>كل 5 دقائق</option>
+                            <option value="15">كل 15 دقيقة</option>
+                            <option value="30">كل 30 دقيقة</option>
+                            <option value="0">إيقاف</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync History -->
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <i class="fas fa-history text-gold"></i>
+                    سجل المزامنة
+                </h2>
+                <div id="sync-log" class="space-y-2 max-h-64 overflow-y-auto">
+                    <div class="text-center py-8 text-textMuted">
+                        <i class="fas fa-cloud-upload-alt text-4xl mb-2 text-muted"></i>
+                        <p class="text-sm">لا توجد عمليات مزامنة بعد</p>
+                    </div>
+                </div>
+                <button onclick="clearSyncLog()" class="mt-4 px-4 py-2 rounded-xl border border-gray-300 text-sm text-textMuted hover:bg-gray-50">
+                    <i class="fas fa-trash ml-1"></i> مسح السجل
+                </button>
+            </div>
+        </section>
+
+        <!-- SETTINGS TAB -->
+        <section id="settings" class="tab-content hidden animate-fade-in">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-coins text-gold"></i>
+                        إعدادات السعر
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-textMuted mb-2">السعر لكل ساعة (ليرة سورية جديدة)</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="price-per-hour" value="100" min="1" class="flex-1 px-4 py-3 rounded-xl border-2 border-secondary/30 focus:border-gold focus:outline-none bg-white/80 text-lg font-semibold" onchange="updateSettings()">
+                                <span class="text-sm font-bold text-muted whitespace-nowrap">ل.س جديد</span>
+                            </div>
+                            <p class="text-xs text-muted mt-1">السعر بالقديم: <span id="price-old-display" class="font-bold text-secondary">10000</span> ل.س قديم</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-gold"></i>
+                        الحماية الذكية
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-textMuted mb-2">فترة التهدئة (ثواني)</label>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="cooldown-slider" min="5" max="60" value="30" class="flex-1 accent-primary" oninput="updateCooldownDisplay()">
+                                <span id="cooldown-display" class="text-lg font-bold text-primary w-12 text-center">30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-6 md:col-span-2">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-id-card text-gold"></i>
+                        حالة البطاقات (50 بطاقة)
+                    </h2>
+                    <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3" id="cards-grid"></div>
+                </div>
+                <div class="glass rounded-2xl p-6 md:col-span-2">
+                    <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                        <i class="fas fa-database text-gold"></i>
+                        إدارة البيانات
+                    </h2>
+                    <div class="grid sm:grid-cols-4 gap-4">
+                        <button onclick="openSetupModal()" class="glass-card py-4 px-6 rounded-xl flex flex-col items-center gap-2 hover:bg-blue-50">
+                            <i class="fas fa-cloud-upload-alt text-blue-600 text-2xl"></i>
+                            <span class="font-semibold text-sm">ربط جوجل شيت</span>
+                        </button>
+                        <button onclick="exportToJSON()" class="glass-card py-4 px-6 rounded-xl flex flex-col items-center gap-2 hover:bg-green-50">
+                            <i class="fas fa-download text-green-600 text-2xl"></i>
+                            <span class="font-semibold text-sm">تصدير JSON</span>
+                        </button>
+                        <label class="glass-card py-4 px-6 rounded-xl flex flex-col items-center gap-2 hover:bg-purple-50 cursor-pointer">
+                            <i class="fas fa-upload text-purple-600 text-2xl"></i>
+                            <span class="font-semibold text-sm">استيراد JSON</span>
+                            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importFromJSON(this)">
+                        </label>
+                        <button onclick="showResetModal()" class="glass-card py-4 px-6 rounded-xl flex flex-col items-center gap-2 hover:bg-red-50">
+                            <i class="fas fa-trash-alt text-red-600 text-2xl"></i>
+                            <span class="font-semibold text-sm">إعادة تعيين</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background: rgba(45, 80, 22, 0.3); backdrop-filter: blur(8px);">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full animate-fade-in shadow-2xl">
+            <div class="text-center mb-6">
+                <img src="https://www.image2url.com/r2/default/images/1777193694982-0955eb59-0903-4510-ac64-e437d393f4b2.jpg" alt="شعار النادي" class="w-20 h-20 rounded-full mx-auto mb-3 object-cover border-3 border-gold">
+                <h2 class="text-xl font-bold text-primary font-tajawal">كراج نادي الفروسية المركزي</h2>
+                <p class="text-xs text-muted">إيصال دفع</p>
+            </div>
+            <div class="receipt rounded-xl p-4 mb-6 space-y-3">
+                <div class="flex justify-between">
+                    <span class="text-sm text-textMuted">رقم البطاقة:</span>
+                    <span id="receipt-card" class="font-bold text-primary">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-textMuted">وقت الدخول:</span>
+                    <span id="receipt-entry" class="font-bold">--</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-textMuted">وقت الخروج:</span>
+                    <span id="receipt-exit" class="font-bold">--</span>
+                </div>
+                <div class="border-t border-dashed border-secondary/30 pt-3 flex justify-between">
+                    <span class="text-sm text-textMuted">عدد الساعات:</span>
+                    <span id="receipt-hours" class="font-bold text-primary">--</span>
+                </div>
+                <div class="border-t border-dashed border-secondary/30 pt-3 flex justify-between items-center">
+                    <span class="text-sm font-bold text-textMuted">المبلغ (جديد):</span>
+                    <span id="receipt-price-new" class="text-2xl font-bold text-gold">--</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-textMuted">المبلغ (قديم):</span>
+                    <span id="receipt-price-old" class="text-lg font-bold text-secondary">--</span>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeReceipt()" class="btn-primary flex-1 py-3 rounded-xl font-semibold">إغلاق</button>
+                <button onclick="printReceipt()" class="btn-secondary flex-1 py-3 rounded-xl font-semibold">
+                    <i class="fas fa-print ml-2"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Modal -->
+    <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background: rgba(45, 80, 22, 0.3); backdrop-filter: blur(8px);">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full animate-fade-in shadow-2xl">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-red-600 mb-1">تأكيد إعادة التعيين</h3>
+                <p class="text-sm text-textMuted">سيتم حذف جميع البيانات ولا يمكن التراجع!</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeResetModal()" class="flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold hover:bg-gray-50">إلغاء</button>
+                <button onclick="confirmReset()" class="flex-1 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700">تأكيد الحذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
+        <div class="glass-dark text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-slide-in">
+            <i id="toast-icon" class="fas fa-check-circle text-gold"></i>
+            <span id="toast-message" class="font-semibold">تم بنجاح</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== APPS SCRIPT CODE ====================
+        const APPS_SCRIPT_TEMPLATE = `function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const data = JSON.parse(e.postData.contents);
+  const action = data.action;
+  
+  try {
+    if (action === 'saveAll') {
+      saveAllData(ss, data);
+      return response({ success: true, message: 'تم الحفظ بنجاح' });
+    }
+    if (action === 'loadAll') {
+      const result = loadAllData(ss);
+      return response({ success: true, data: result });
+    }
+    if (action === 'appendSession') {
+      appendSession(ss, data.session);
+      return response({ success: true, message: 'تمت الإضافة' });
+    }
+    if (action === 'updateSession') {
+      updateSession(ss, data.sessionId, data.updates);
+      return response({ success: true, message: 'تم التحديث' });
+    }
+    if (action === 'saveSettings') {
+      saveSettings(ss, data.settings);
+      return response({ success: true, message: 'تم حفظ الإعدادات' });
+    }
+    if (action === 'saveCards') {
+      saveCardsData(ss, data.cards);
+      return response({ success: true, message: 'تم حفظ البطاقات' });
+    }
+    return response({ success: false, message: 'عملية غير معروفة' });
+  } catch (err) {
+    return response({ success: false, message: err.toString() });
+  }
+}
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const result = loadAllData(ss);
+  return response({ success: true, data: result });
+}
+
+function saveAllData(ss, data) {
+  // Sessions sheet
+  let sheet = ss.getSheetByName('Sessions');
+  if (!sheet) {
+    sheet = ss.insertSheet('Sessions');
+    sheet.appendRow(['ID', 'CardNumber', 'EntryTime', 'ExitTime', 'Hours', 'PriceNew', 'PriceOld', 'Status', 'Date']);
+  } else {
+    sheet.clear();
+    sheet.appendRow(['ID', 'CardNumber', 'EntryTime', 'ExitTime', 'Hours', 'PriceNew', 'PriceOld', 'Status', 'Date']);
+  }
+  if (data.sessions && data.sessions.length > 0) {
+    const rows = data.sessions.map(s => [s.id, s.cardNumber, s.entryTime, s.exitTime || '', s.hours || 0, s.priceNew || 0, s.priceOld || 0, s.status, s.date]);
+    sheet.getRange(2, 1, rows.length, 9).setValues(rows);
+  }
+  
+  // Cards sheet
+  let cardSheet = ss.getSheetByName('Cards');
+  if (!cardSheet) {
+    cardSheet = ss.insertSheet('Cards');
+    cardSheet.appendRow(['ID', 'Number', 'Barcode', 'Status', 'LastUsed', 'CooldownEnd']);
+  } else {
+    cardSheet.clear();
+    cardSheet.appendRow(['ID', 'Number', 'Barcode', 'Status', 'LastUsed', 'CooldownEnd']);
+  }
+  if (data.cards && data.cards.length > 0) {
+    const cRows = data.cards.map(c => [c.id, c.number, c.barcode, c.status, c.lastUsed || '', c.cooldownEnd || '']);
+    cardSheet.getRange(2, 1, cRows.length, 6).setValues(cRows);
+  }
+  
+  // Settings sheet
+  let setSheet = ss.getSheetByName('Settings');
+  if (!setSheet) {
+    setSheet = ss.insertSheet('Settings');
+    setSheet.appendRow(['Key', 'Value']);
+  }
+  setSheet.clear();
+  setSheet.appendRow(['Key', 'Value']);
+  setSheet.appendRow(['pricePerHour', data.settings?.pricePerHour || 100]);
+  setSheet.appendRow(['cooldownSeconds', data.settings?.cooldownSeconds || 30]);
+  setSheet.appendRow(['todayRevenue', data.stats?.todayRevenue || 0]);
+  setSheet.appendRow(['todaySessions', data.stats?.todaySessions || 0]);
+  setSheet.appendRow(['lastSync', new Date().toISOString()]);
+}
+
+function loadAllData(ss) {
+  const result = { sessions: [], cards: [], settings: {} };
+  
+  const sheet = ss.getSheetByName('Sessions');
+  if (sheet) {
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      result.sessions.push({
+        id: data[i][0], cardNumber: data[i][1], entryTime: data[i][2],
+        exitTime: data[i][3], hours: data[i][4], priceNew: data[i][5],
+        priceOld: data[i][6], status: data[i][7], date: data[i][8]
+      });
+    }
+  }
+  
+  const cardSheet = ss.getSheetByName('Cards');
+  if (cardSheet) {
+    const cData = cardSheet.getDataRange().getValues();
+    for (let i = 1; i < cData.length; i++) {
+      result.cards.push({
+        id: cData[i][0], number: cData[i][1], barcode: cData[i][2],
+        status: cData[i][3], lastUsed: cData[i][4], cooldownEnd: cData[i][5]
+      });
+    }
+  }
+  
+  const setSheet = ss.getSheetByName('Settings');
+  if (setSheet) {
+    const sData = setSheet.getDataRange().getValues();
+    for (let i = 1; i < sData.length; i++) {
+      result.settings[sData[i][0]] = sData[i][1];
+    }
+  }
+  
+  return result;
+}
+
+function appendSession(ss, session) {
+  let sheet = ss.getSheetByName('Sessions');
+  if (!sheet) {
+    sheet = ss.insertSheet('Sessions');
+    sheet.appendRow(['ID', 'CardNumber', 'EntryTime', 'ExitTime', 'Hours', 'PriceNew', 'PriceOld', 'Status', 'Date']);
+  }
+  sheet.appendRow([session.id, session.cardNumber, session.entryTime, '', 0, 0, 0, session.status, session.date]);
+}
+
+function updateSession(ss, sessionId, updates) {
+  const sheet = ss.getSheetByName('Sessions');
+  if (!sheet) return;
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] == sessionId) {
+      if (updates.exitTime) sheet.getRange(i + 1, 4).setValue(updates.exitTime);
+      if (updates.hours) sheet.getRange(i + 1, 5).setValue(updates.hours);
+      if (updates.priceNew) sheet.getRange(i + 1, 6).setValue(updates.priceNew);
+      if (updates.priceOld) sheet.getRange(i + 1, 7).setValue(updates.priceOld);
+      if (updates.status) sheet.getRange(i + 1, 8).setValue(updates.status);
+      break;
+    }
+  }
+}
+
+function saveSettings(ss, settings) {
+  let sheet = ss.getSheetByName('Settings');
+  if (!sheet) {
+    sheet = ss.insertSheet('Settings');
+    sheet.appendRow(['Key', 'Value']);
+  }
+  const data = sheet.getDataRange().getValues();
+  const map = {};
+  for (let i = 1; i < data.length; i++) map[data[i][0]] = i + 1;
+  
+  const pairs = { pricePerHour: settings.pricePerHour, cooldownSeconds: settings.cooldownSeconds };
+  for (const [key, val] of Object.entries(pairs)) {
+    if (map[key]) sheet.getRange(map[key], 2).setValue(val);
+    else sheet.appendRow([key, val]);
+  }
+}
+
+function saveCardsData(ss, cards) {
+  let sheet = ss.getSheetByName('Cards');
+  if (!sheet) {
+    sheet = ss.insertSheet('Cards');
+    sheet.appendRow(['ID', 'Number', 'Barcode', 'Status', 'LastUsed', 'CooldownEnd']);
+  } else {
+    sheet.clear();
+    sheet.appendRow(['ID', 'Number', 'Barcode', 'Status', 'LastUsed', 'CooldownEnd']);
+  }
+  if (cards && cards.length > 0) {
+    const rows = cards.map(c => [c.id, c.number, c.barcode, c.status, c.lastUsed || '', c.cooldownEnd || '']);
+    sheet.getRange(2, 1, rows.length, 6).setValues(rows);
+  }
+}
+
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+        // ==================== GOOGLE SHEETS INTEGRATION ====================
+        const CLOUD_CONFIG = {
+            WEB_APP_URL: localStorage.getItem('cec_web_app_url') || '',
+            AUTO_SYNC: localStorage.getItem('cec_auto_sync') !== 'false',
+            SYNC_INTERVAL_MINUTES: parseInt(localStorage.getItem('cec_sync_interval')) || 5,
+            LAST_SYNC: localStorage.getItem('cec_last_sync') || '',
+            SYNC_LOG: JSON.parse(localStorage.getItem('cec_sync_log') || '[]')
+        };
+
+        let syncTimer = null;
+
+        function saveCloudConfig() {
+            localStorage.setItem('cec_web_app_url', CLOUD_CONFIG.WEB_APP_URL);
+            localStorage.setItem('cec_auto_sync', CLOUD_CONFIG.AUTO_SYNC);
+            localStorage.setItem('cec_sync_interval', CLOUD_CONFIG.SYNC_INTERVAL_MINUTES);
+            localStorage.setItem('cec_last_sync', CLOUD_CONFIG.LAST_SYNC);
+            localStorage.setItem('cec_sync_log', JSON.stringify(CLOUD_CONFIG.SYNC_LOG.slice(-50)));
+        }
+
+        function addSyncLogEntry(type, message) {
+            CLOUD_CONFIG.SYNC_LOG.push({
+                time: new Date().toISOString(),
+                type: type, // 'success', 'error', 'info'
+                message: message
+            });
+            CLOUD_CONFIG.LAST_SYNC = new Date().toISOString();
+            saveCloudConfig();
+            renderSyncLog();
+        }
+
+        async function sendToCloud(data) {
+            if (!CLOUD_CONFIG.WEB_APP_URL) {
+                return { success: false, error: 'لم يتم ربط جوجل شيت' };
+            }
+
+            showSyncProgress(true);
+            setConnectionStatus('syncing');
+
+            try {
+                const response = await fetch(CLOUD_CONFIG.WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify(data)
+                });
+
+                showSyncProgress(false);
+
+                if (CLOUD_CONFIG.AUTO_SYNC || data.action === 'saveAll') {
+                    addSyncLogEntry('success', `تم إرسال: ${data.action}`);
+                }
+                setConnectionStatus('online');
+                return { success: true };
+            } catch (err) {
+                showSyncProgress(false);
+                addSyncLogEntry('error', err.message);
+                setConnectionStatus('offline');
+                return { success: false, error: err.message };
+            }
+        }
+
+        async function loadFromCloud() {
+            if (!CLOUD_CONFIG.WEB_APP_URL) {
+                return { success: false, error: 'لم يتم ربط جوجل شيت' };
+            }
+
+            showSyncProgress(true);
+            setConnectionStatus('syncing');
+
+            try {
+                const response = await fetch(CLOUD_CONFIG.WEB_APP_URL + '?action=loadAll');
+                const result = await response.json();
+
+                showSyncProgress(false);
+                addSyncLogEntry('success', 'تم تحميل البيانات من السحابة');
+                setConnectionStatus('online');
+                return result;
+            } catch (err) {
+                showSyncProgress(false);
+                addSyncLogEntry('error', 'فشل التحميل: ' + err.message);
+                setConnectionStatus('offline');
+                return { success: false, error: err.message };
+            }
+        }
+
+        async function syncToCloud() {
+            const data = {
+                action: 'saveAll',
+                sessions: allSessions,
+                cards: cards,
+                settings: settings,
+                stats: stats
+            };
+
+            // Always save to localStorage first
+            saveAllData();
+
+            const result = await sendToCloud(data);
+            if (result.success) {
+                showToast('تمت المزامنة بنجاح', 'success');
+            } else {
+                showToast('فشل المزامنة - البيانات محفوظة محلياً', 'warning');
+            }
+            return result;
+        }
+
+        async function syncSessionToCloud(session) {
+            // Save to localStorage first
+            saveSessions();
+            saveCards();
+
+            if (!CLOUD_CONFIG.WEB_APP_URL) return;
+
+            await sendToCloud({
+                action: 'appendSession',
+                session: session
+            });
+        }
+
+        async function updateSessionInCloud(sessionId, updates) {
+            saveSessions();
+            saveCards();
+
+            if (!CLOUD_CONFIG.WEB_APP_URL) return;
+
+            await sendToCloud({
+                action: 'updateSession',
+                sessionId: sessionId,
+                updates: updates
+            });
+        }
+
+        function showSyncProgress(show) {
+            const bar = document.getElementById('sync-progress');
+            const progressBar = document.getElementById('sync-progress-bar');
+            if (show) {
+                bar.classList.remove('hidden');
+                progressBar.style.width = '0%';
+                setTimeout(() => { progressBar.style.width = '30%'; }, 50);
+                setTimeout(() => { progressBar.style.width = '70%'; }, 300);
+                setTimeout(() => { progressBar.style.width = '100%'; }, 600);
+            } else {
+                setTimeout(() => { bar.classList.add('hidden'); }, 500);
+            }
+        }
+
+        function setConnectionStatus(status) {
+            const dot = document.getElementById('conn-dot');
+            const text = document.getElementById('conn-text');
+
+            dot.className = 'connection-dot';
+            if (status === 'online') {
+                dot.classList.add('online');
+                text.textContent = 'متصل';
+                text.className = 'text-sm font-semibold text-success';
+            } else if (status === 'offline') {
+                dot.classList.add('offline');
+                text.textContent = 'غير متصل';
+                text.className = 'text-sm font-semibold text-red-500';
+            } else if (status === 'syncing') {
+                dot.classList.add('syncing');
+                text.textContent = 'جاري المزامنة';
+                text.className = 'text-sm font-semibold text-warning';
+            }
+        }
+
+        function setInitialConnectionStatus() {
+            if (CLOUD_CONFIG.WEB_APP_URL) {
+                setConnectionStatus('online');
+            } else {
+                setConnectionStatus('offline');
+            }
+        }
+
+        async function manualSync() {
+            if (!CLOUD_CONFIG.WEB_APP_URL) {
+                openSetupModal();
+                return;
+            }
+            await syncToCloud();
+        }
+
+        function setupAutoSync() {
+            if (syncTimer) clearInterval(syncTimer);
+            if (CLOUD_CONFIG.AUTO_SYNC && CLOUD_CONFIG.SYNC_INTERVAL_MINUTES > 0 && CLOUD_CONFIG.WEB_APP_URL) {
+                syncTimer = setInterval(() => {
+                    syncToCloud();
+                }, CLOUD_CONFIG.SYNC_INTERVAL_MINUTES * 60 * 1000);
+            }
+        }
+
+        function toggleAutoSync() {
+            CLOUD_CONFIG.AUTO_SYNC = document.getElementById('auto-sync-toggle').checked;
+            saveCloudConfig();
+            setupAutoSync();
+            showToast(CLOUD_CONFIG.AUTO_SYNC ? 'تم تفعيل المزامنة التلقائية' : 'تم إيقاف المزامنة التلقائية', 'success');
+        }
+
+        function updateSyncInterval() {
+            CLOUD_CONFIG.SYNC_INTERVAL_MINUTES = parseInt(document.getElementById('sync-interval').value);
+            saveCloudConfig();
+            setupAutoSync();
+        }
+
+        function renderSyncLog() {
+            const container = document.getElementById('sync-log');
+            if (CLOUD_CONFIG.SYNC_LOG.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-textMuted"><i class="fas fa-cloud-upload-alt text-4xl mb-2 text-muted"></i><p class="text-sm">لا توجد عمليات مزامنة بعد</p></div>';
+                return;
+            }
+
+            container.innerHTML = CLOUD_CONFIG.SYNC_LOG.slice().reverse().slice(0, 30).map(entry => {
+                let icon, color;
+                if (entry.type === 'success') { icon = 'fa-check-circle'; color = 'text-success'; }
+                else if (entry.type === 'error') { icon = 'fa-times-circle'; color = 'text-red-500'; }
+                else { icon = 'fa-info-circle'; color = 'text-info'; }
+
+                const time = new Date(entry.time).toLocaleString('ar-SY', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                return `
+                    <div class="flex items-center gap-3 p-3 rounded-lg bg-white/50 border border-gray-100">
+                        <i class="fas ${icon} ${color} text-sm"></i>
+                        <span class="text-sm flex-1">${entry.message}</span>
+                        <span class="text-xs text-muted whitespace-nowrap">${time}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearSyncLog() {
+            CLOUD_CONFIG.SYNC_LOG = [];
+            saveCloudConfig();
+            renderSyncLog();
+        }
+
+        function updateLastSyncDisplay() {
+            const el = document.getElementById('last-sync-time');
+            if (CLOUD_CONFIG.LAST_SYNC) {
+                const time = new Date(CLOUD_CONFIG.LAST_SYNC).toLocaleString('ar-SY', { hour: '2-digit', minute: '2-digit' });
+                el.textContent = time;
+            } else {
+                el.textContent = 'لم تتم بعد';
+            }
+        }
+
+        // ==================== SETUP MODAL ====================
+        function openSetupModal() {
+            const modal = document.getElementById('setup-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('web-app-url').value = CLOUD_CONFIG.WEB_APP_URL;
+            document.getElementById('apps-script-code').textContent = APPS_SCRIPT_TEMPLATE;
+        }
+
+        function closeSetupModal() {
+            const modal = document.getElementById('setup-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function copyAppsScript() {
+            navigator.clipboard.writeText(APPS_SCRIPT_TEMPLATE).then(() => {
+                showToast('تم نسخ الكود بنجاح', 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = APPS_SCRIPT_TEMPLATE;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('تم نسخ الكود بنجاح', 'success');
+            });
+        }
+
+        function copyWebAppUrl() {
+            const urlInput = document.getElementById('web-app-url');
+            const url = (urlInput.value || CLOUD_CONFIG.WEB_APP_URL || '').trim();
+            if (!url) {
+                showToast('لا يوجد رابط للمشاركة', 'warning');
+                return;
+            }
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('تم نسخ رابط المشاركة', 'success');
+            }).catch(() => {
+                urlInput.select();
+                document.execCommand('copy');
+                showToast('تم نسخ الرابط بنجاح', 'success');
+            });
+        }
+
+        async function testConnection() {
+            const url = document.getElementById('web-app-url').value.trim();
+            if (!url) {
+                showToast('الرجاء إدخال الرابط', 'warning');
+                return;
+            }
+
+            CLOUD_CONFIG.WEB_APP_URL = url;
+            saveCloudConfig();
+
+            showToast('جاري اختبار الاتصال...', 'info');
+            const result = await loadFromCloud();
+
+            if (result.success && result.data) {
+                showToast('الاتصال ناجح! جاري تحميل البيانات...', 'success');
+
+                // Load data from cloud
+                if (result.data.sessions) {
+                    allSessions = result.data.sessions;
+                    activeSessions = allSessions.filter(s => s.status === 'active');
+                    saveSessions();
+                }
+                if (result.data.cards) {
+                    cards = result.data.cards;
+                    saveCards();
+                }
+                if (result.data.settings) {
+                    settings.pricePerHour = parseInt(result.data.settings.pricePerHour) || 100;
+                    settings.cooldownSeconds = parseInt(result.data.settings.cooldownSeconds) || 30;
+                    saveSettings();
+                }
+                if (result.data.settings) {
+                    stats.todayRevenue = parseFloat(result.data.settings.todayRevenue) || 0;
+                    stats.todaySessions = parseInt(result.data.settings.todaySessions) || 0;
+                    saveStats();
+                }
+
+                // Update UI
+                document.getElementById('price-per-hour').value = settings.pricePerHour;
+                document.getElementById('cooldown-slider').value = settings.cooldownSeconds;
+                updateCooldownDisplay();
+                updatePriceOldDisplay();
+                renderAll();
+                setupAutoSync();
+                closeSetupModal();
+            } else {
+                // Still save the URL, might work for POST even if GET fails
+                showToast('تم حفظ الرابط - جرب الإرسال', 'success');
+                setConnectionStatus('online');
+                closeSetupModal();
+            }
+        }
+
+        // ==================== STATE MANAGEMENT ====================
+        const STORAGE_KEYS = {
+            CARDS: 'cec_cards',
+            SESSIONS: 'cec_sessions',
+            SETTINGS: 'cec_settings',
+            STATS: 'cec_stats'
+        };
+
+        let html5QrCode = null;
+        let activeSessions = [];
+        let allSessions = [];
+        let cards = [];
+        let settings = { pricePerHour: 100, cooldownSeconds: 30 };
+        let stats = { todayRevenue: 0, todaySessions: 0 };
+        let currentReceipt = null;
+
+        function init() {
+            loadData();
+            initCards();
+            updateClock();
+            setInterval(updateClock, 1000);
+            setInterval(updateLiveTimers, 1000);
+            renderAll();
+            setInitialConnectionStatus();
+            renderSyncLog();
+            updateLastSyncDisplay();
+
+            // Setup cloud
+            if (CLOUD_CONFIG.WEB_APP_URL) {
+                setupAutoSync();
+            }
+        }
+
+        function initCards() {
+            if (cards.length === 0) {
+                cards = [];
+                for (let i = 1; i <= 50; i++) {
+                    cards.push({
+                        id: i,
+                        number: String(i).padStart(2, '0'),
+                        barcode: 'CARD' + String(i).padStart(3, '0'),
+                        status: 'available',
+                        lastUsed: null,
+                        cooldownEnd: null
+                    });
+                }
+                saveCards();
+            }
+        }
+
+        function loadData() {
+            const savedCards = localStorage.getItem(STORAGE_KEYS.CARDS);
+            const savedSessions = localStorage.getItem(STORAGE_KEYS.SESSIONS);
+            const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+            const savedStats = localStorage.getItem(STORAGE_KEYS.STATS);
+
+            if (savedCards) cards = JSON.parse(savedCards);
+            if (savedSessions) allSessions = JSON.parse(savedSessions);
+            if (savedSettings) settings = JSON.parse(savedSettings);
+            if (savedStats) stats = JSON.parse(savedStats);
+
+            activeSessions = allSessions.filter(s => s.status === 'active');
+
+            document.getElementById('price-per-hour').value = settings.pricePerHour || 100;
+            document.getElementById('cooldown-slider').value = settings.cooldownSeconds || 30;
+            updateCooldownDisplay();
+            updatePriceOldDisplay();
+
+            // Load cloud sync settings
+            document.getElementById('auto-sync-toggle').checked = CLOUD_CONFIG.AUTO_SYNC;
+            document.getElementById('sync-interval').value = CLOUD_CONFIG.SYNC_INTERVAL_MINUTES || 5;
+        }
+
+        function saveAllData() {
+            saveCards();
+            saveSessions();
+            saveSettings();
+            saveStats();
+        }
+
+        function saveCards() { localStorage.setItem(STORAGE_KEYS.CARDS, JSON.stringify(cards)); }
+        function saveSessions() { localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(allSessions)); }
+        function saveSettings() { localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings)); }
+        function saveStats() { localStorage.setItem(STORAGE_KEYS.STATS, JSON.stringify(stats)); }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('ar-SY');
+            document.getElementById('date').textContent = now.toLocaleDateString('ar-SY');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            if (tabId === 'active') renderActiveSessions();
+            if (tabId === 'history') renderHistory();
+            if (tabId === 'settings') renderCardsGrid();
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'cloud') {
+                updateLastSyncDisplay();
+                renderSyncLog();
+            }
+            if (tabId === 'scan') {
+                document.getElementById('scan-result').classList.add('hidden');
+            }
+        }
+
+        function findCardByBarcode(barcode) {
+            barcode = barcode.trim().toUpperCase();
+            let card = cards.find(c => c.barcode === barcode);
+            if (card) return card;
+            card = cards.find(c => c.number === barcode || c.id.toString() === barcode);
+            if (card) return card;
+            card = cards.find(c => barcode.includes(c.barcode) || c.barcode.includes(barcode));
+            if (card) return card;
+            const num = parseInt(barcode);
+            if (num >= 1 && num <= 50) return cards.find(c => c.id === num);
+            return null;
+        }
+
+        async function processScan(barcode) {
+            const card = findCardByBarcode(barcode);
+            if (!card) {
+                showToast('البطاقة غير موجودة!', 'error');
+                showScanResult(null, 'error');
+                return;
+            }
+
+            const now = new Date();
+
+            if (card.status === 'cooldown' && card.cooldownEnd) {
+                const cooldownEnd = new Date(card.cooldownEnd);
+                if (now < cooldownEnd) {
+                    const secondsLeft = Math.ceil((cooldownEnd - now) / 1000);
+                    showToast(`البطاقة في فترة تهدئة! انتظر ${secondsLeft} ثانية`, 'warning');
+                    showScanResult(card, 'cooldown', secondsLeft);
+                    return;
+                }
+            }
+
+            if (card.status === 'active') {
+                // Exit
+                const session = activeSessions.find(s => s.cardId === card.id && s.status === 'active');
+                if (session) {
+                    session.exitTime = now.toISOString();
+                    session.status = 'completed';
+
+                    const entry = new Date(session.entryTime);
+                    const diffMs = now - entry;
+                    const diffHours = diffMs / (1000 * 60 * 60);
+                    session.hours = Math.ceil(diffHours * 2) / 2;
+                    if (session.hours < 0.5) session.hours = 0.5;
+
+                    session.priceNew = session.hours * settings.pricePerHour;
+                    session.priceOld = session.priceNew * 100;
+
+                    stats.todayRevenue += session.priceNew;
+                    stats.todaySessions += 1;
+
+                    card.status = 'cooldown';
+                    card.lastUsed = now.toISOString();
+                    card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
+
+                    activeSessions = activeSessions.filter(s => s.id !== session.id);
+
+                    saveAllData();
+
+                    // Sync to cloud
+                    await updateSessionInCloud(session.id, {
+                        exitTime: session.exitTime,
+                        hours: session.hours,
+                        priceNew: session.priceNew,
+                        priceOld: session.priceOld,
+                        status: 'completed'
+                    });
+
+                    showToast(`خروج: بطاقة #${card.number} | ${session.hours} ساعة | ${session.priceNew} ل.س`, 'success');
+                    showReceipt(session, card);
+                    showScanResult(card, 'exit', session);
+                    renderAll();
+                }
+            } else {
+                // Entry
+                const session = {
+                    id: Date.now().toString() + '_' + card.id,
+                    cardId: card.id,
+                    cardNumber: card.number,
+                    entryTime: now.toISOString(),
+                    exitTime: null,
+                    hours: 0,
+                    priceNew: 0,
+                    priceOld: 0,
+                    status: 'active',
+                    date: now.toISOString().split('T')[0]
+                };
+
+                allSessions.push(session);
+                activeSessions.push(session);
+
+                card.status = 'active';
+                card.lastUsed = now.toISOString();
+
+                saveAllData();
+
+                // Sync to cloud
+                await syncSessionToCloud(session);
+
+                showToast(`دخول: بطاقة #${card.number}`, 'success');
+                showScanResult(card, 'entry');
+                renderAll();
+            }
+        }
+
+        function processManualEntry() {
+            const input = document.getElementById('manual-input');
+            const value = input.value.trim();
+            if (!value) {
+                showToast('الرجاء إدخال رقم البطاقة', 'warning');
+                return;
+            }
+            processScan(value);
+            input.value = '';
+        }
+
+        function startScanner() {
+            const container = document.getElementById('scanner-container');
+            container.innerHTML = '<div id="reader" class="w-full h-full"></div><div class="scan-line"></div>';
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.333 },
+                (decodedText) => { processScan(decodedText); },
+                () => {}
+            ).then(() => {
+                document.getElementById('btn-start-scan').classList.add('hidden');
+                document.getElementById('btn-stop-scan').classList.remove('hidden');
+                showToast('الكاميرا تعمل', 'success');
+            }).catch(err => {
+                showToast('خطأ في تشغيل الكاميرا: ' + err, 'error');
+                container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/70"><div class="text-center"><i class="fas fa-exclamation-circle text-4xl mb-2 text-accent"></i><p class="text-sm">لا توجد كاميرا متاحة</p></div></div>';
+            });
+        }
+
+        function stopScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('btn-start-scan').classList.remove('hidden');
+                    document.getElementById('btn-stop-scan').classList.add('hidden');
+                    document.getElementById('scanner-container').innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/50"><div class="text-center"><i class="fas fa-camera text-4xl mb-2"></i><p class="text-sm">اضغط "تشغيل الكاميرا" للبدء</p></div></div><div class="scan-line"></div>';
+                });
+            }
+        }
+
+        function appendNum(num) { document.getElementById('manual-input').value += num; }
+        function clearNum() { const i = document.getElementById('manual-input'); i.value = i.value.slice(0, -1); }
+        function clearAllNum() { document.getElementById('manual-input').value = ''; }
+
+        function renderAll() {
+            renderDashboard();
+            renderActiveSessions();
+            renderHistory();
+            renderCardsGrid();
+            updateActiveBadge();
+        }
+
+        function renderDashboard() {
+            const activeCount = activeSessions.length;
+            const availableCount = 50 - activeCount;
+
+            document.getElementById('stat-cars').textContent = activeCount;
+            document.getElementById('bar-cars').style.width = (activeCount / 50 * 100) + '%';
+            document.getElementById('stat-revenue-new').textContent = stats.todayRevenue.toLocaleString() + ' ل.س';
+            document.getElementById('stat-revenue-old').textContent = (stats.todayRevenue * 100).toLocaleString() + ' قديم';
+            document.getElementById('stat-sessions').textContent = stats.todaySessions;
+            document.getElementById('stat-available').textContent = availableCount;
+            document.getElementById('bar-available').style.width = (availableCount / 50 * 100) + '%';
+
+            const today = new Date().toISOString().split('T')[0];
+            const todaySessions = allSessions.filter(s => s.date === today && s.status === 'completed');
+            const tbody = document.getElementById('today-summary-body');
+
+            if (todaySessions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-textMuted">لا توجد جلسات اليوم</td></tr>';
+            } else {
+                tbody.innerHTML = todaySessions.slice(-10).reverse().map(s => `
+                    <tr class="border-b border-gray-100 session-row">
+                        <td class="py-3 px-4 font-bold text-primary">#${s.cardNumber}</td>
+                        <td class="py-3 px-4 text-sm">${formatTime(s.entryTime)}</td>
+                        <td class="py-3 px-4 text-sm">${formatTime(s.exitTime)}</td>
+                        <td class="py-3 px-4 text-sm font-semibold">${s.hours} ساعة</td>
+                        <td class="py-3 px-4 text-sm font-bold text-gold">${s.priceNew.toLocaleString()} ل.س</td>
+                        <td class="py-3 px-4 text-sm font-bold text-secondary">${s.priceOld.toLocaleString()} ل.س</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderActiveSessions() {
+            const tbody = document.getElementById('active-sessions-body');
+            document.getElementById('active-count').textContent = activeSessions.length;
+
+            if (activeSessions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-textMuted">لا توجد سيارات بالكراج حالياً</td></tr>';
+            } else {
+                tbody.innerHTML = activeSessions.map(s => {
+                    const entry = new Date(s.entryTime);
+                    const now = new Date();
+                    const diffMins = Math.floor((now - entry) / 60000);
+                    const diffHours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+                    const timeStr = diffHours > 0 ? `${diffHours}س ${mins}د` : `${mins}د`;
+
+                    const hoursDecimal = (now - entry) / (1000 * 60 * 60);
+                    const roundedHours = Math.ceil(hoursDecimal * 2) / 2;
+                    const estPrice = Math.max(roundedHours, 0.5) * settings.pricePerHour;
+
+                    return `
+                        <tr class="border-b border-gray-100 session-row">
+                            <td class="py-3 px-4 font-bold text-primary">#${s.cardNumber}</td>
+                            <td class="py-3 px-4 text-sm">${formatTime(s.entryTime)}</td>
+                            <td class="py-3 px-4 text-sm font-semibold timer-live text-accent">${timeStr}</td>
+                            <td class="py-3 px-4 text-sm font-bold text-gold">~${estPrice.toLocaleString()} ل.س</td>
+                            <td class="py-3 px-4">
+                                <button onclick="forceExit('${s.id}')" class="btn-accent px-3 py-1.5 rounded-lg text-xs font-semibold">
+                                    <i class="fas fa-sign-out-alt ml-1"></i> خروج
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            const cooldownCards = cards.filter(c => c.status === 'cooldown');
+            const cooldownGrid = document.getElementById('cooldown-grid');
+            if (cooldownCards.length === 0) {
+                cooldownGrid.innerHTML = '<p class="col-span-full text-center py-4 text-textMuted text-sm">لا توجد بطاقات في فترة التهدئة</p>';
+            } else {
+                cooldownGrid.innerHTML = cooldownCards.map(c => {
+                    const end = new Date(c.cooldownEnd);
+                    const now = new Date();
+                    const secondsLeft = Math.max(0, Math.ceil((end - now) / 1000));
+                    return `<div class="card-badge active glass-card rounded-lg p-2 text-center" style="border: 1px solid rgba(230, 57, 70, 0.3);">
+                        <span class="text-xs font-bold text-accent block">#${c.number}</span>
+                        <span class="text-[10px] text-muted">${secondsLeft}ث</span>
+                    </div>`;
+                }).join('');
+            }
+        }
+
+        function updateLiveTimers() {
+            renderActiveSessions();
+            const now = new Date();
+            cards.forEach(c => {
+                if (c.status === 'cooldown' && c.cooldownEnd && now >= new Date(c.cooldownEnd)) {
+                    c.status = 'available';
+                    c.cooldownEnd = null;
+                    saveCards();
+                    renderCardsGrid();
+                }
+            });
+        }
+
+        function renderHistory(filter = 'all') {
+            let sessions = [...allSessions].reverse();
+            const today = new Date().toISOString().split('T')[0];
+
+            if (filter === 'today') sessions = sessions.filter(s => s.date === today);
+            else if (filter === 'week') {
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                sessions = sessions.filter(s => new Date(s.entryTime) >= weekAgo);
+            }
+
+            const tbody = document.getElementById('history-body');
+            if (sessions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-textMuted">لا توجد جلسات</td></tr>';
+            } else {
+                tbody.innerHTML = sessions.map((s, i) => `
+                    <tr class="border-b border-gray-100 session-row ${s.status === 'active' ? 'bg-green-50/50' : ''}">
+                        <td class="py-3 px-4 text-sm text-muted">${sessions.length - i}</td>
+                        <td class="py-3 px-4 font-bold text-primary">#${s.cardNumber}</td>
+                        <td class="py-3 px-4 text-sm">${formatDateTime(s.entryTime)}</td>
+                        <td class="py-3 px-4 text-sm">${s.exitTime ? formatDateTime(s.exitTime) : '<span class="text-green-600 font-semibold">نشطة</span>'}</td>
+                        <td class="py-3 px-4 text-sm font-semibold">${s.hours > 0 ? s.hours + ' ساعة' : '-'}</td>
+                        <td class="py-3 px-4 text-sm font-bold text-gold">${s.priceNew > 0 ? s.priceNew.toLocaleString() : '-'}</td>
+                        <td class="py-3 px-4 text-sm font-bold text-secondary">${s.priceOld > 0 ? s.priceOld.toLocaleString() : '-'}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function filterHistory(type) {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('bg-white/80', 'text-textMain');
+            });
+            document.getElementById('filter-' + type).classList.remove('bg-white/80', 'text-textMain');
+            document.getElementById('filter-' + type).classList.add('bg-primary', 'text-white');
+            renderHistory(type);
+        }
+
+        function renderCardsGrid() {
+            const grid = document.getElementById('cards-grid');
+            grid.innerHTML = cards.map(c => {
+                let bgClass, icon;
+                if (c.status === 'available') { bgClass = 'bg-green-50 border-green-200 text-green-700'; icon = '<i class="fas fa-check text-xs"></i>'; }
+                else if (c.status === 'active') { bgClass = 'bg-red-50 border-red-200 text-red-700'; icon = '<i class="fas fa-car text-xs"></i>'; }
+                else { bgClass = 'bg-yellow-50 border-yellow-200 text-yellow-700'; icon = '<i class="fas fa-clock text-xs"></i>'; }
+                return `<div class="glass-card rounded-xl p-2 text-center ${bgClass} border cursor-pointer hover:scale-105 transition-transform" onclick="showCardInfo(${c.id})">
+                    <span class="text-xs font-bold block">#${c.number}</span>
+                    <span class="text-[10px] block mt-1">${icon}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function updateActiveBadge() {
+            const badge = document.getElementById('active-badge');
+            if (activeSessions.length > 0) {
+                badge.textContent = activeSessions.length;
+                badge.classList.remove('hidden');
+            } else { badge.classList.add('hidden'); }
+        }
+
+        function showScanResult(card, type, extra = null) {
+            const resultDiv = document.getElementById('scan-result');
+            const contentDiv = document.getElementById('scan-result-content');
+            resultDiv.classList.remove('hidden');
+
+            if (type === 'error') {
+                contentDiv.innerHTML = '<div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-times text-red-600 text-2xl"></i></div><h3 class="text-lg font-bold text-red-600">البطاقة غير موجودة</h3>';
+            } else if (type === 'cooldown') {
+                contentDiv.innerHTML = `<div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-clock text-yellow-600 text-2xl"></i></div><h3 class="text-lg font-bold text-yellow-600">فترة تهدئة</h3><p class="text-2xl font-bold text-primary mt-2">${extra} ثانية</p>`;
+            } else if (type === 'entry') {
+                contentDiv.innerHTML = `<div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3 animate-bounce-soft"><i class="fas fa-sign-in-alt text-green-600 text-2xl"></i></div><h3 class="text-lg font-bold text-green-600">تم تسجيل الدخول</h3><p class="text-lg font-bold text-primary mt-2">${formatTime(new Date())}</p>`;
+            } else if (type === 'exit') {
+                const session = extra;
+                contentDiv.innerHTML = `<div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3"><i class="fas fa-sign-out-alt text-blue-600 text-2xl"></i></div><h3 class="text-lg font-bold text-blue-600">تم تسجيل الخروج</h3><div class="mt-3 space-y-1"><p class="text-sm">المدة: <span class="font-bold text-primary">${session.hours} ساعة</span></p><p class="text-sm">السعر الجديد: <span class="font-bold text-gold">${session.priceNew.toLocaleString()} ل.س</span></p></div>`;
+            }
+        }
+
+        function showReceipt(session, card) {
+            currentReceipt = session;
+            document.getElementById('receipt-card').textContent = '#' + card.number;
+            document.getElementById('receipt-entry').textContent = formatDateTime(session.entryTime);
+            document.getElementById('receipt-exit').textContent = formatDateTime(session.exitTime);
+            document.getElementById('receipt-hours').textContent = session.hours + ' ساعة';
+            document.getElementById('receipt-price-new').textContent = session.priceNew.toLocaleString() + ' ل.س';
+            document.getElementById('receipt-price-old').textContent = session.priceOld.toLocaleString() + ' ل.س';
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReceipt() {
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function printReceipt() { window.print(); }
+
+        async function forceExit(sessionId) {
+            const session = activeSessions.find(s => s.id === sessionId);
+            if (!session) return;
+            const card = cards.find(c => c.id === session.cardId);
+            if (!card) return;
+
+            const now = new Date();
+            session.exitTime = now.toISOString();
+            session.status = 'completed';
+            const diffMs = now - new Date(session.entryTime);
+            const diffHours = diffMs / (1000 * 60 * 60);
+            session.hours = Math.ceil(diffHours * 2) / 2;
+            if (session.hours < 0.5) session.hours = 0.5;
+            session.priceNew = session.hours * settings.pricePerHour;
+            session.priceOld = session.priceNew * 100;
+            stats.todayRevenue += session.priceNew;
+            stats.todaySessions += 1;
+            card.status = 'cooldown';
+            card.lastUsed = now.toISOString();
+            card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
+            activeSessions = activeSessions.filter(s => s.id !== sessionId);
+
+            saveAllData();
+            await updateSessionInCloud(session.id, {
+                exitTime: session.exitTime, hours: session.hours,
+                priceNew: session.priceNew, priceOld: session.priceOld, status: 'completed'
+            });
+
+            showReceipt(session, card);
+            renderAll();
+            showToast('تم تسجيل الخروج يدوياً', 'success');
+        }
+
+        function updateSettings() {
+            const price = parseInt(document.getElementById('price-per-hour').value) || 100;
+            const cooldown = parseInt(document.getElementById('cooldown-slider').value) || 30;
+            settings.pricePerHour = price;
+            settings.cooldownSeconds = cooldown;
+            saveSettings();
+            updatePriceOldDisplay();
+            showToast('تم حفظ الإعدادات', 'success');
+            syncToCloud();
+        }
+
+        function updateCooldownDisplay() {
+            const val = document.getElementById('cooldown-slider').value;
+            document.getElementById('cooldown-display').textContent = val;
+        }
+
+        function updatePriceOldDisplay() {
+            const price = parseInt(document.getElementById('price-per-hour').value) || 0;
+            document.getElementById('price-old-display').textContent = (price * 100).toLocaleString();
+        }
+
+        function showResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeResetModal() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        function confirmReset() {
+            localStorage.removeItem(STORAGE_KEYS.CARDS);
+            localStorage.removeItem(STORAGE_KEYS.SESSIONS);
+            localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+            localStorage.removeItem(STORAGE_KEYS.STATS);
+            cards = []; allSessions = []; activeSessions = [];
+            stats = { todayRevenue: 0, todaySessions: 0 };
+            settings = { pricePerHour: 100, cooldownSeconds: 30 };
+            initCards();
+            document.getElementById('price-per-hour').value = 100;
+            document.getElementById('cooldown-slider').value = 30;
+            updateCooldownDisplay(); updatePriceOldDisplay();
+            renderAll(); closeResetModal();
+            syncToCloud();
+            showToast('تم إعادة تعيين جميع البيانات', 'success');
+        }
+
+        function exportToJSON() {
+            const data = { cards, sessions: allSessions, settings, stats, exportDate: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url;
+            a.download = `cec_garage_${new Date().toISOString().split('T')[0]}.json`;
+            a.click(); URL.revokeObjectURL(url);
+            showToast('تم تصدير البيانات بنجاح', 'success');
+        }
+
+        function importFromJSON(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.cards) cards = data.cards;
+                    if (data.sessions) allSessions = data.sessions;
+                    if (data.settings) settings = data.settings;
+                    if (data.stats) stats = data.stats;
+                    activeSessions = allSessions.filter(s => s.status === 'active');
+                    saveAllData();
+                    document.getElementById('price-per-hour').value = settings.pricePerHour;
+                    document.getElementById('cooldown-slider').value = settings.cooldownSeconds;
+                    updateCooldownDisplay(); updatePriceOldDisplay();
+                    renderAll(); syncToCloud();
+                    showToast('تم استيراد البيانات بنجاح', 'success');
+                } catch { showToast('خطأ في قراءة الملف', 'error'); }
+            };
+            reader.readAsText(file); input.value = '';
+        }
+
+        function exportToExcel() {
+            const data = allSessions.map((s, i) => ({
+                'رقم': i + 1, 'رقم البطاقة': s.cardNumber,
+                'الحالة': s.status === 'active' ? 'نشطة' : 'مكتملة',
+                'وقت الدخول': formatDateTime(s.entryTime),
+                'وقت الخروج': s.exitTime ? formatDateTime(s.exitTime) : '-',
+                'عدد الساعات': s.hours || '-',
+                'السعر (ل.س جديد)': s.priceNew || '-',
+                'السعر (ل.س قديم)': s.priceOld || '-'
+            }));
+            if (data.length === 0) { showToast('لا توجد بيانات للتصدير', 'warning'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'جلسات الكراج');
+            XLSX.writeFile(wb, `cec_garage_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showToast('تم تصدير Excel بنجاح', 'success');
+        }
+
+        function formatTime(iso) { if (!iso) return '-'; return new Date(iso).toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+        function formatDateTime(iso) { if (!iso) return '-'; return new Date(iso).toLocaleString('ar-SY', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-message').textContent = message;
+            icon.className = type === 'success' ? 'fas fa-check-circle text-gold' : type === 'error' ? 'fas fa-times-circle text-red-400' : 'fas fa-exclamation-triangle text-yellow-400';
+            toast.classList.remove('hidden');
+            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+        }
+
+        function showCardInfo(cardId) {
+            const card = cards.find(c => c.id === cardId);
+            if (!card) return;
+            let msg = `بطاقة #${card.number}\nالحالة: `;
+            if (card.status === 'available') msg += 'متاحة';
+            else if (card.status === 'active') msg += 'نشطة (بالكراج)';
+            else msg += 'فترة تهدئة';
+            if (card.lastUsed) msg += `\nآخر استخدام: ${formatDateTime(card.lastUsed)}`;
+            showToast(msg, 'success');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement.id === 'manual-input') processManualEntry();
+        });
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
+
