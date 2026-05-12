@@ -1043,7 +1043,7 @@ function response(obj) {
 
         // ==================== GOOGLE SHEETS INTEGRATION ====================
         const CLOUD_CONFIG = {
-            WEB_APP_URL: localStorage.getItem('cec_web_app_url') || '',
+            WEB_APP_URL: localStorage.getItem('cec_web_app_url') || 'https://script.google.com/macros/s/AKfycbyH-QL-ayZmV7b_kDF__rddFQZF5hhTGabyQF96nUA8JRbjohbNK8LK0wWuXsAuOd_n/exec',
             AUTO_SYNC: localStorage.getItem('cec_auto_sync') !== 'false',
             SYNC_INTERVAL_MINUTES: parseInt(localStorage.getItem('cec_sync_interval')) || 5,
             LAST_SYNC: localStorage.getItem('cec_last_sync') || '',
@@ -1401,7 +1401,7 @@ function response(obj) {
         let currentReceipt = null;
         let soundEnabled = localStorage.getItem('cec_sound_enabled') !== 'false';
 
-        function init() {
+        async function init() {
             loadData();
             initCards();
             updateClock();
@@ -1413,10 +1413,44 @@ function response(obj) {
             updateLastSyncDisplay();
             updateSoundButton();
 
-            // Setup cloud
+            // Load data from Google Sheets on startup if a URL is configured
             if (CLOUD_CONFIG.WEB_APP_URL) {
+                await loadCloudDataOnStartup();
                 setupAutoSync();
             }
+        }
+
+        async function loadCloudDataOnStartup() {
+            const result = await loadFromCloud();
+            if (!result.success || !result.data) return;
+
+            if (result.data.sessions) {
+                allSessions = result.data.sessions;
+                activeSessions = allSessions.filter(s => s.status === 'active');
+                saveSessions();
+            }
+            if (result.data.cards) {
+                cards = result.data.cards;
+                saveCards();
+            }
+            if (result.data.settings) {
+                settings.pricePerHour = parseInt(result.data.settings.pricePerHour) || settings.pricePerHour;
+                settings.cooldownSeconds = parseInt(result.data.settings.cooldownSeconds) || settings.cooldownSeconds;
+                saveSettings();
+            }
+            if (result.data.settings) {
+                stats.todayRevenue = parseFloat(result.data.settings.todayRevenue) || stats.todayRevenue;
+                stats.todaySessions = parseInt(result.data.settings.todaySessions) || stats.todaySessions;
+                saveStats();
+            }
+
+            document.getElementById('price-per-hour').value = settings.pricePerHour;
+            document.getElementById('cooldown-slider').value = settings.cooldownSeconds;
+            updateCooldownDisplay();
+            updatePriceOldDisplay();
+            renderAll();
+            updateLastSyncDisplay();
+            addSyncLogEntry('success', 'تم تحميل البيانات من Google Sheets عند التشغيل');
         }
 
         function initCards() {
