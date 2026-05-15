@@ -533,6 +533,15 @@
                         <button onclick="stopScanner()" id="btn-stop-scan" class="btn-accent flex-1 py-3 rounded-xl font-semibold hidden">
                             <i class="fas fa-stop ml-2"></i> إيقاف
                         </button>
+                        <button onclick="switchCamera()" id="btn-switch-camera" class="py-3 px-4 rounded-xl border border-gray-300 text-sm text-textMuted hover:bg-gray-50 hidden">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <p class="text-xs text-muted">نصائح لقراءة أفضل:</p>
+                        <p class="text-xs text-muted">• تأكد من الإضاءة الجيدة</p>
+                        <p class="text-xs text-muted">• اجعل QR code في منتصف الإطار</p>
+                        <p class="text-xs text-muted">• حافظ على مسافة 20-30 سم</p>
                     </div>
                     <div class="flex gap-3 mt-3">
                         <button onclick="testCamera()" class="btn-secondary py-2 px-4 rounded-xl font-semibold text-sm">
@@ -1399,6 +1408,7 @@ function response(obj) {
         let settings = { pricePerHour: 100, cooldownSeconds: 30 };
         let stats = { todayRevenue: 0, todaySessions: 0 };
         let currentReceipt = null;
+        let currentCameraFacing = "environment"; // "environment" للخلفية، "user" للأمامية
         let soundEnabled = localStorage.getItem('cec_sound_enabled') !== 'false';
 
         async function init() {
@@ -1686,26 +1696,39 @@ function response(obj) {
 
             html5QrCode = new Html5Qrcode("reader");
 
+            const config = {
+                fps: 30,  // زيادة سرعة الإطارات من 10 إلى 30
+                qrbox: { width: 300, height: 300 },  // زيادة حجم منطقة القراءة من 200 إلى 300
+                aspectRatio: 1.0,  // نسبة عرض إلى ارتفاع مربعة
+                supportedScanTypes: ["qr_code"],  // قراءة QR codes فقط
+                experimentalFeatures: {
+                    useBarCodeDetectorIfSupported: true  // استخدام API الكشف عن الباركود إذا متاح
+                }
+            };
+
             html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 },
+                { facingMode: currentCameraFacing },  // استخدام الكاميرا المحددة
+                config,
                 (decodedText) => { 
                     console.log('QR Code detected:', decodedText);
                     playClickSound();
                     processScan(decodedText); 
                 },
                 (errorMessage) => {
-                    console.log('QR Code scan error:', errorMessage);
+                    // تقليل رسائل الخطأ لتحسين الأداء - تجاهل رسائل "No QR code found"
+                    if (errorMessage.includes("No QR code found")) return;
+                    console.log('QR Scan error:', errorMessage);
                 }
             ).then(() => {
                 console.log('Camera started successfully');
                 document.getElementById('btn-start-scan').classList.add('hidden');
                 document.getElementById('btn-stop-scan').classList.remove('hidden');
-                showToast('الكاميرا تعمل', 'success');
+                document.getElementById('btn-switch-camera').classList.remove('hidden');
+                showToast('الكاميرا تعمل - تأكد من الإضاءة الجيدة والمسافة المناسبة', 'success');
             }).catch(err => {
                 console.error('Camera start error:', err);
-                showToast('خطأ في تشغيل الكاميرا: ' + err, 'error');
-                container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/70"><div class="text-center"><i class="fas fa-exclamation-circle text-4xl mb-2 text-accent"></i><p class="text-sm">لا توجد كاميرا متاحة</p></div></div>';
+                showToast('خطأ في تشغيل الكاميرا: ' + err.message, 'error');
+                container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/70"><div class="text-center"><i class="fas fa-exclamation-circle text-4xl mb-2 text-accent"></i><p class="text-sm">لا توجد كاميرا متاحة</p><p class="text-xs mt-2">تأكد من منح الصلاحيات واستخدام متصفح حديث</p></div></div>';
             });
         }
 
@@ -1714,7 +1737,17 @@ function response(obj) {
                 html5QrCode.stop().then(() => {
                     document.getElementById('btn-start-scan').classList.remove('hidden');
                     document.getElementById('btn-stop-scan').classList.add('hidden');
+                    document.getElementById('btn-switch-camera').classList.add('hidden');
                     document.getElementById('scanner-container').innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-white/50"><div class="text-center"><i class="fas fa-camera text-4xl mb-2"></i><p class="text-sm">اضغط "تشغيل الكاميرا" للبدء</p></div></div><div class="scan-line"></div>';
+                });
+            }
+        }
+
+        function switchCamera() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    currentCameraFacing = currentCameraFacing === "environment" ? "user" : "environment";
+                    startScanner();
                 });
             }
         }
