@@ -1049,8 +1049,9 @@ function response(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }`;
-
+</script>
         // ==================== GOOGLE SHEETS INTEGRATION ====================
+<script>
         const CLOUD_CONFIG = {
             WEB_APP_URL: localStorage.getItem('cec_web_app_url') || 'https://script.google.com/macros/s/AKfycbyH-QL-ayZmV7b_kDF__rddFQZF5hhTGabyQF96nUA8JRbjohbNK8LK0wWuXsAuOd_n/exec',
             AUTO_SYNC: localStorage.getItem('cec_auto_sync') !== 'false',
@@ -1689,92 +1690,6 @@ function response(obj) {
             }
         }
 
-            // التعديل الأول: تطبيق فترة التهدئة بغض النظر عن حالة البطاقة
-            if (card.cooldownEnd) {
-                const cooldownEnd = new Date(card.cooldownEnd);
-                if (now < cooldownEnd) {
-                    const secondsLeft = Math.ceil((cooldownEnd - now) / 1000);
-                    showToast(`البطاقة في فترة تهدئة! انتظر ${secondsLeft} ثانية`, 'warning');
-                    return; // إخفاء الواجهة المزعجة والاكتفاء بالرسالة
-                }
-            }
-
-            if (card.status === 'active') {
-                // Exit
-                const session = activeSessions.find(s => s.cardId === card.id && s.status === 'active');
-                if (session) {
-                    session.exitTime = now.toISOString();
-                    session.status = 'completed';
-
-                    const entry = new Date(session.entryTime);
-                    const diffMs = now - entry;
-                    const diffHours = diffMs / (1000 * 60 * 60);
-                    session.hours = Math.ceil(diffHours * 2) / 2;
-                    if (session.hours < 0.5) session.hours = 0.5;
-
-                    session.priceNew = session.hours * settings.pricePerHour;
-                    session.priceOld = session.priceNew * 100;
-
-                    stats.todayRevenue += session.priceNew;
-                    stats.todaySessions += 1;
-
-                    card.status = 'cooldown';
-                    card.lastUsed = now.toISOString();
-                    card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
-
-                    activeSessions = activeSessions.filter(s => s.id !== session.id);
-
-                    saveAllData();
-
-                    // Sync to cloud
-                    await updateSessionInCloud(session.id, {
-                        exitTime: session.exitTime,
-                        hours: session.hours,
-                        priceNew: session.priceNew,
-                        priceOld: session.priceOld,
-                        status: 'completed'
-                    });
-
-                    playSaveSound();
-                    showToast(`خروج: بطاقة #${card.number} | ${session.hours} ساعة | ${session.priceNew} ل.س`, 'success');
-                    showReceipt(session, card);
-                    showScanResult(card, 'exit', session);
-                    renderAll();
-                }
-            } else {
-                // Entry
-                const session = {
-                    id: Date.now().toString() + '_' + card.id,
-                    cardId: card.id,
-                    cardNumber: card.number,
-                    entryTime: now.toISOString(),
-                    exitTime: null,
-                    hours: 0,
-                    priceNew: 0,
-                    priceOld: 0,
-                    status: 'active',
-                    date: now.toISOString().split('T')[0]
-                };
-
-                allSessions.push(session);
-                activeSessions.push(session);
-
-                // التعديل الثاني: إضافة التهدئة عند الدخول لمنع الخروج الفوري
-                card.status = 'active';
-                card.lastUsed = now.toISOString();
-                card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
-
-                playSaveSound();
-                saveAllData();
-
-                // Sync to cloud
-                await syncSessionToCloud(session);
-
-                showToast(`دخول: بطاقة #${card.number}`, 'success');
-                showScanResult(card, 'entry');
-                renderAll();
-            }
-        }
 
         function processManualEntry() {
             const input = document.getElementById('manual-input');
