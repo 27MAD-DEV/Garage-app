@@ -1410,6 +1410,8 @@ function response(obj) {
         let currentReceipt = null;
         let currentCameraFacing = "environment"; // "environment" للخلفية، "user" للأمامية
         let soundEnabled = localStorage.getItem('cec_sound_enabled') !== 'false';
+        let lastScannedBarcode = null;
+        let lastScannedTime = 0;
 
         async function init() {
             loadData();
@@ -1580,6 +1582,16 @@ function response(obj) {
         }
 
         async function processScan(barcode) {
+            barcode = barcode.trim();
+            const now = new Date();
+            const nowMs = now.getTime();
+            if (lastScannedBarcode === barcode && nowMs - lastScannedTime < 1200) {
+                console.log('Ignoring duplicate scan:', barcode);
+                return;
+            }
+            lastScannedBarcode = barcode;
+            lastScannedTime = nowMs;
+
             console.log('Processing scan for barcode:', barcode);
             const card = findCardByBarcode(barcode);
             console.log('Found card:', card);
@@ -1589,7 +1601,93 @@ function response(obj) {
                 return;
             }
 
-            const now = new Date();
+            // Use the actual active session to decide whether this scan is entry or exit
+            const activeSession = allSessions.find(s => s.cardId === card.id && s.status === 'active');
+
+            // التعديل الأول: تطبيق فترة التهدئة بغض النظر عن حالة البطاقة
+            if (card.cooldownEnd) {
+                const cooldownEnd = new Date(card.cooldownEnd);
+                if (now < cooldownEnd && !activeSession) {
+                    const secondsLeft = Math.ceil((cooldownEnd - now) / 1000);
+                    showToast(`البطاقة في فترة تهدئة! انتظر ${secondsLeft} ثانية`, 'warning');
+                    return; // إخفاء الواجهة المزعجة والاكتفاء بالرسالة
+                }
+            }
+
+            if (activeSession) {
+                // Exit
+                const session = activeSession;
+                session.exitTime = now.toISOString();
+                session.status = 'completed';
+
+                const entry = new Date(session.entryTime);
+                const diffMs = now - entry;
+                const diffHours = diffMs / (1000 * 60 * 60);
+                session.hours = Math.ceil(diffHours * 2) / 2;
+                if (session.hours < 0.5) session.hours = 0.5;
+
+                session.priceNew = session.hours * settings.pricePerHour;
+                session.priceOld = session.priceNew * 100;
+
+                stats.todayRevenue += session.priceNew;
+                stats.todaySessions += 1;
+
+                card.status = 'cooldown';
+                card.lastUsed = now.toISOString();
+                card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
+
+                activeSessions = activeSessions.filter(s => s.id !== session.id);
+
+                saveAllData();
+
+                // Sync to cloud
+                await updateSessionInCloud(session.id, {
+                    exitTime: session.exitTime,
+                    hours: session.hours,
+                    priceNew: session.priceNew,
+                    priceOld: session.priceOld,
+                    status: 'completed'
+                });
+
+                playSaveSound();
+                showToast(`خروج: بطاقة #${card.number} | ${session.hours} ساعة | ${session.priceNew} ل.س`, 'success');
+                showReceipt(session, card);
+                showScanResult(card, 'exit', session);
+                renderAll();
+            } else {
+                // Entry
+                const session = {
+                    id: Date.now().toString() + '_' + card.id,
+                    cardId: card.id,
+                    cardNumber: card.number,
+                    entryTime: now.toISOString(),
+                    exitTime: null,
+                    hours: 0,
+                    priceNew: 0,
+                    priceOld: 0,
+                    status: 'active',
+                    date: now.toISOString().split('T')[0]
+                };
+
+                allSessions.push(session);
+                activeSessions.push(session);
+
+                // التعديل الثاني: إضافة التهدئة عند الدخول لمنع الخروج الفوري
+                card.status = 'active';
+                card.lastUsed = now.toISOString();
+                card.cooldownEnd = new Date(now.getTime() + settings.cooldownSeconds * 1000).toISOString();
+
+                playSaveSound();
+                saveAllData();
+
+                // Sync to cloud
+                await syncSessionToCloud(session);
+
+                showToast(`دخول: بطاقة #${card.number}`, 'success');
+                showScanResult(card, 'entry');
+                renderAll();
+            }
+        }
 
             // التعديل الأول: تطبيق فترة التهدئة بغض النظر عن حالة البطاقة
             if (card.cooldownEnd) {
